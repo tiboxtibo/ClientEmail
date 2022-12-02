@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.MailListController">
+
+    <children>
+        <VBox prefHeight="400.0" prefWidth="190.0">
+            <children>
+                <ListView fx:id="mailList" maxHeight="1.7976931348623157E308" onMouseClicked="#handleMouseClick" prefHeight="461.0" prefWidth="189.0" />
+            </children>
+        </VBox>
+        <GridPane prefHeight="400.0" prefWidth="413.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="62.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="263.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="62.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="20.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="30.0" minHeight="6.0" prefHeight="12.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="20.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="20.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="20.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="269.0" minHeight="10.0" prefHeight="165.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="232.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="232.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="text-area" stylesheets="@style.css" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+               <content>
+                      <Label id="Body" fx:id="textLabel" minHeight="-Infinity" minWidth="-Infinity" styleClass="scritta" stylesheets="@style.css" text="Testo" />
+               </content>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </ScrollPane>
+                <Label fx:id="daLabel" stylesheets="@style.css" text="Da" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <styleClass>
+                  <String fx:value="scritta" />
+                  <String fx:value="scrittaHeader" />
+               </styleClass></Label>
+                <Label fx:id="mittenteLabel" styleClass="scritta" stylesheets="@style.css" text="Mittente" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label fx:id="aLabel" stylesheets="@style.css" text="A" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <styleClass>
+                  <String fx:value="scritta" />
+                  <String fx:value="scrittaHeader" />
+               </styleClass></Label>
+                <Label fx:id="destLabel" styleClass="scritta" stylesheets="@style.css" text="Destinatario" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <Label fx:id="objLabel" stylesheets="@style.css" text="Oggetto" GridPane.columnIndex="1" GridPane.rowIndex="7">
+               <styleClass>
+                  <String fx:value="scritta" />
+                  <String fx:value="scrittaHeader" />
+               </styleClass></Label>
+                <Label fx:id="oggettoLabel" styleClass="scritta" stylesheets="@style.css" text="Oggetto" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                <Label fx:id="dataLabel" styleClass="scritta" stylesheets="@style.css" text="Data" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                <Button fx:id="answerMail" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#answerMail" prefHeight="26.0" prefWidth="29.0" styleClass="btn" stylesheets="@style.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <graphic>
+                  <ImageView fitHeight="27.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true" styleClass="btn">
+                     <image>
+                        <Image url="@../images/reply.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip graphicTextGap="2.0" text="Reply" textOverrun="CLIP" />
+               </tooltip></Button>
+                <Button fx:id="answerAll" layoutX="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#answerAll" prefHeight="26.0" prefWidth="29.0" styleClass="btn" stylesheets="@style.css" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <graphic>
+                  <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" styleClass="btn">
+                     <image>
+                        <Image url="@../images/replyall.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Reply all" />
+               </tooltip></Button>
+                <Button fx:id="forwardMail" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#forwardMail" prefHeight="26.0" prefWidth="29.0" styleClass="btn" stylesheets="@style.css" GridPane.columnIndex="2" GridPane.rowIndex="5">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" styleClass="btn">
+                     <image>
+                        <Image url="@../images/forward.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Forward" />
+               </tooltip></Button>
+            <Button fx:id="deleteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteMail" prefHeight="26.0" prefWidth="29.0" styleClass="btn" stylesheets="@style.css" GridPane.columnIndex="2" GridPane.rowIndex="7">
+               <graphic>
+                  <ImageView fitHeight="41.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" styleClass="btn">
+                     <image>
+                        <Image url="@../images/trash.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Delete" />
+               </tooltip></Button>
+                <Button fx:id="RefreshMailButton" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#refreshAllMails" prefHeight="26.0" prefWidth="29.0" styleClass="btn" stylesheets="@style.css" textOverrun="CLIP" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+               <graphic>
+                  <ImageView fitHeight="35.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" styleClass="btn">
+                     <image>
+                        <Image url="@../images/refresh.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Refresh" />
+               </tooltip>
+            </Button>
+                <Button fx:id="newMailBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createNewMail" prefHeight="26.0" prefWidth="29.0" styleClass="btn" stylesheets="@style.css" GridPane.columnIndex="2" GridPane.rowIndex="11">
+               <tooltip>
+                  <Tooltip text="New mail" />
+               </tooltip></Button>
+            <ImageView fitHeight="27.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" styleClass="btn" GridPane.columnIndex="2" GridPane.rowIndex="11">
+               <image>
+                  <Image url="@../images/newRed.png" />
+               </image>
+            </ImageView>
+
+
+            </children>
+        </GridPane>
+    </children>
+</HBox>
