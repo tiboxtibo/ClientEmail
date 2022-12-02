@@ -33,7 +33,7 @@ public class ClientGUI extends Application {
     // Scene start
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("login"), 640, 480);
+        scene = new Scene(loadFXML("login"), 900, 500);
         stage.setScene(scene);
         stage.show();
     }
