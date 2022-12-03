@@ -24,8 +24,8 @@
         <Pane layoutX="488.0" layoutY="166.0" prefHeight="264.0" prefWidth="283.0" AnchorPane.bottomAnchor="73.0" AnchorPane.topAnchor="166.0">
             <children>
                 <TextField fx:id="userTextField" layoutX="7.0" prefHeight="34.0" prefWidth="275.0" promptText="username or email" />
-                <PasswordField fx:id="pwdTextField" layoutX="7.0" layoutY="61.0" prefHeight="34.0" prefWidth="275.0" promptText="password" stylesheets="@../../resources/app/fullpackstyling.css" />
-                <Button fx:id="loginBtn" layoutX="77.0" layoutY="118.0" mnemonicParsing="false" onAction="#loginClick" prefHeight="34.0" prefWidth="137.0" stylesheets="@../../resources/app/fullpackstyling.css" text="Sign in" />
+                <PasswordField fx:id="pwdTextField" layoutX="7.0" layoutY="61.0" prefHeight="34.0" prefWidth="275.0" promptText="password"  />
+                <Button fx:id="loginBtn" layoutX="77.0" layoutY="118.0" mnemonicParsing="false" onAction="#loginClick" prefHeight="34.0" prefWidth="137.0"  text="Sign in" />
                 <Separator layoutX="8.0" layoutY="190.0" prefHeight="7.0" prefWidth="275.0" />
                 <Label fx:id="errLabel" alignment="CENTER" layoutX="8.0" layoutY="95.0" prefHeight="23.0" prefWidth="275.0" textFill="#ff6354">
                     <font>

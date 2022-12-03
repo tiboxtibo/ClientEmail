@@ -80,8 +80,6 @@ public class MailListController implements Initializable {
     @FXML
     public void createNewMail(ActionEvent event) throws IOException {
         secondStage();
-        //TODO create new email non funge
-        System.out.println("print");
     }
 
     /**

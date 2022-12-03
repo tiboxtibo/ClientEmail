@@ -150,7 +150,7 @@ public class ServerController implements Initializable {
                                 outStream.writeObject(newMails);//TODO metto in stream NewMails, ovvero tutte le mail che vengono dopo data1, ovvero tutte le nuove email
                                 break;
 
-                            case 3:  //Invia una mail -> data una mail da mandare, leggi tutte le altre nel json e aggiungi la da mandare al file json
+                            case 3:  //Invia una mail -> data una mail da mandare, leggi tutte le altre nel json e aggiungi la mail da mandare al file json
                                 Email newMail = (Email) p.getObj2(); //prendi l'obj2 che contine la mail da mandare
                                 List<String> dests = newMail.getDestinatari(); //estraggo i destinatari
                                 boolean allSent = true;
@@ -168,41 +168,43 @@ public class ServerController implements Initializable {
                                         sentDests.add(s);//aggiungo il destinatario
                                     }
                                     else if(resUser instanceof Boolean){ //user non trovato
-                                        allSent = false;
-                                        notSentDests.add(s);
+                                        allSent = false;//variabile booleana che setto a false se non trovo un user così poi da scriverlo su teminale
+                                        notSentDests.add(s);//aggiungo il destinatario alla lista dei destinatari "non trovati"
                                     }
                                 }
                                 newMail.setDestinatario(sentDests);//setta il destinatario alla nuova mail
-                                for (User u : sentUser){
-                                        emails = FileQuery.readMailJSON(u);
+                                for (User u : sentUser){//per ogni user trovato nell'elenco dei destinatari
+                                        emails = FileQuery.readMailJSON(u);//TODO legge l'elenco delle mail di user u dal file json
                                         int lastID = 0;
-                                        if(emails.size() > 0)
+                                        if(emails.size() > 0)//se l'elenco delle mail di user non è vuoto allora prendo l'ultimo id e lo incremento
                                             lastID = emails.get(emails.size()-1).getId() + 1;
-                                        newMail.setId(lastID);
-                                        emails.add(newMail);
-                                        FileQuery.writeMailListJSON(emails, u);
+                                        newMail.setId(lastID);//setto il nuovo id -> se l'elenco è vuoto è uguale a zero
+                                        emails.add(newMail);//aggiungo la nuova email
+                                        FileQuery.writeMailListJSON(emails, u);//scrivo il nuovo elenco di user con la nuova mail aggiunta
                                 }
 
                                 result = new Pair(allSent, notSentDests);
-                                printOnLog(newMail.getMittente() + " sent a new mail.");
+                                printOnLog(newMail.getMittente() + " Ha inviato una nuova email");//messaggio da terminale sul server
                                 for (String s: sentDests) {
-                                    printOnLog(s + " received a new mail.");
+                                    printOnLog(s + " Ha ricevuto una nuova email");//scrivo i destinatari (che ho trovato) sul terminale
                                 }
-                                if(!allSent)printOnLog(newMail.destinatariToString() + " not found");
+                                //TODO se scrivo sdf@gmail.com,matteo@gmail.com -> mi da matteo@gmail.com NON  TROVATO
+                                if(!allSent)printOnLog(newMail.destinatariToString() + " NON trovato");//se non ho trovato tutti i destinatari allora lo scrivo su terminale
                                 outStream.flush();
-                                outStream.writeObject(result);
+
+                                outStream.writeObject(result);//mando il risultato in outputSream sul socket
                                 break;
 
-                            case 4:                                                 //Delete method --> Given a mail Id it read all the mails, find the one with the given id, delete it from the list and rewrite on the json file
-                                int mailId = (int) p.getObj2();
+                            case 4: //Elimina mail -> data un mail id, leggo tutte le email e trovo quella da cancellare, la rimuovo e riscrivo il file json
+                                int mailId = (int) p.getObj2();//prendo il mailid da getObj2
                                 Boolean res = false;
                                 res = FileQuery.deleteMail(myUser, mailId);
-                                printOnLog("Mail deleted by " + incoming.getInetAddress());
+                                printOnLog("Mail ID: "+ mailId + " eliminata da" + incoming.getInetAddress());//stampo sul terminale del server
                                 outStream.flush();
-                                outStream.writeObject(res);
+                                outStream.writeObject(res);//mando il risultato in outputSream sul socket
                                 break;
 
-                            default:
+                            default: //chiudo l'InputStream e l'OutputStream del socket
                                 outStream.close();
                                 inStream.close();
                         }
@@ -211,7 +213,7 @@ public class ServerController implements Initializable {
                     }
                 }
             } catch (EOFException | ParseException e) {
-            } finally {
+            } finally {//chiudo nuovamente l'InputStream e l'OutputStream del socket nel caso ci fossero state eccezioni da catturare
                 incoming.close();
                 outStream.close();
                 inStream.close();
@@ -220,11 +222,7 @@ public class ServerController implements Initializable {
 
     }
 
-    /**
-     * Print on the log list the message.
-     *
-     * @param msg the message to be printed.
-     */
+    /** Stampo nel Log list (del server) il messaggio msg */
     private void printOnLog(String msg) {
         listLog.getItems().add(msg);
     }
