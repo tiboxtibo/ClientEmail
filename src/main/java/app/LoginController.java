@@ -1,5 +1,6 @@
 package app;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,12 +15,16 @@ import java.util.regex.Pattern;
  */
 public class LoginController {
 
+
+
     @FXML
     private TextField userTextField;
     @FXML
     private PasswordField pwdTextField;
     @FXML
     private Label errLabel;
+
+
 
     /**
      * Switch to mail view.
@@ -30,6 +35,8 @@ public class LoginController {
     public static void switchToMailView() throws IOException {
         ClientGUI.setRoot("mailview");
     }
+
+
 
     /**
      * Event handler for the login button.

@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -18,6 +15,8 @@ import java.net.ConnectException;
 import java.net.URL;
 import java.util.*;
 
+
+/** Controller per la Homepage -> Mail List  */
 public class MailListController implements Initializable {
 
     public static Stage stage = null;
@@ -31,23 +30,25 @@ public class MailListController implements Initializable {
     private HashMap<Integer, Email> map = new HashMap<Integer, Email>();
     private ArrayList<Email> list = new ArrayList<Email>();
 
+    @FXML
+    public TextArea textMailUser;
+
     private Email currentMail;
     private int hashIndex = 0;
     private int startNumMails = 0;
 
     public static Boolean mutex = false;
 
-    /**
-     * Handle mouse click on the listView.
-     * Shows details of mails received and show buttons for more actions.
-     *
-     * @param arg0 the arg 0
-     */
+    /** Handle mouse Click fa visualizzare i dettagli dell'email selezionata e fa visualizzare i bottoni per azioni aggiuntive */
     @FXML
     public void handleMouseClick(MouseEvent arg0) {
-        hashIndex = mailList.getSelectionModel().getSelectedIndex();
-        currentMail = list.get(hashIndex);
-        //TODO capire i binding
+        hashIndex = mailList.getSelectionModel().getSelectedIndex();//seleziona l'index della mail nella list view
+        currentMail = list.get(hashIndex);//prende la mail corrispondente all'hash index
+
+        //TODO chiedere se i binding così vanno bene o se devo usare obbligatoriamente la formula:
+        //visualizza.textProperty().bind(inserimento.textProperty())
+
+        /**Se la mail selezionata non è null allora eseguo tutti i bindings e rendo visibii i dettagli e i nuovi pulsanti */
         if (currentMail != null) {
             mittenteLabel.setText(currentMail.getMittente());
             destLabel.setText(currentMail.destinatariToString().replace("\"", ""));
@@ -71,43 +72,31 @@ public class MailListController implements Initializable {
 
     }
 
-    /**
-     * Open new scene for creating a new mail.
-     *
-     * @param event the event
-     * @throws IOException the io exception
-     */
+
+    /** Crea una nuova scena per creare una nuova mail */
     @FXML
     public void createNewMail(ActionEvent event) throws IOException {
         secondStage();
     }
 
-    /**
-     * Open new scene for creating a new mail with current mail's recipients.
-     *
-     * @param event the event
-     * @throws IOException the io exception
-     */
+    /** Crea una nuova scena per rispondere alla mail selezionata */
     @FXML
     public void answerMail(ActionEvent event) throws IOException {
-        NewMailController.destinatari = currentMail.getMittente();
+        NewMailController.destinatari = currentMail.getMittente(); //setto la variabile di destinatari già con il destinatario corrente
         secondStage();
     }
 
-    /**
-     * Open new scene for creating a new mail with all the current mail's recipients.
-     * We set the recipients to the previous sender and all recipients.
-     *
-     * @param event the event
-     * @throws IOException the io exception
-     */
+
+    /** Crea una nuova scena per rispondere a tutti */
     @FXML
     public void answerAll(ActionEvent event) throws IOException {
+        //metto in un array le mail dei destinatari che sono separate da una virgola
         String[] split = currentMail.destinatariToString().split(",");
         String tot = "";
+        //TODO capire questo -> probabilmente un errore che si verificava splittando le email
         for(int i = 0; i< split.length;i++){
             String currSplit = split[i].replace("\"", "");
-            if(currSplit.equals(ClientMethods.myUser.getEmail())){
+            if(currSplit.equals(ClientMethods.myUser.getEmail())){//TODO riguardare
             }else{
                 tot += "," + currSplit ;
             }
@@ -116,13 +105,11 @@ public class MailListController implements Initializable {
         secondStage();
     }
 
+
     /**
-     * Open new scene for creating a new mail with current mail's infos for the forward.
-     * We set the object and body of the mail to match the previous one.
-     *
-     * @param event the event
-     * @throws IOException the io exception
-     */
+     * Crea una nuova scena per inoltare la mail selezionata
+     * vengono quindi passati oggetto e testo della mail corrente
+     * */
     @FXML
     public void forwardMail(ActionEvent event) throws IOException {
         NewMailController.oggetto = currentMail.getOggetto();
@@ -130,35 +117,27 @@ public class MailListController implements Initializable {
         secondStage();
     }
 
-    /**
-     * Method that deletes the selected mail when the user click the delete button.
-     *
-     * @param event the event
-     * @throws IOException the io exception
-     */
+
+    /** Elimina la mail selezionata */
     @FXML
     public void deleteMail(ActionEvent event) throws IOException, ClassNotFoundException {
         ClientMethods.deleteMail(currentMail.getId());
-        mailList.getItems().remove(hashIndex);
+        mailList.getItems().remove(hashIndex);//la rimuove dalla mailList
         list.remove(hashIndex);
         //checkNewMails();
     }
 
+
     /**
-     * Method that forces the server to refresh the received mails.
-     * Usually the server auto refreshes the list every 10 seconds.
-     *
-     * @param event the event
-     */
+     * Metodo per ricaricare la mailList per controllare l'arrivo di nuove email
+     * Solitamente il server ricarica automaticamente la lista ogni 10 secondi
+     * */
     public void refreshAllMails(ActionEvent event) {
         checkNewMails();
     }
 
-    /**
-     * Load the fxml for the new scene, used for all the actions.
-     *
-     * @throws IOException the io exception
-     */
+
+    /** Carica la Nuova scena per inviare una nuova email o per rispondere e inoltrare */
     public void secondStage() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("newmail.fxml"));
@@ -169,55 +148,47 @@ public class MailListController implements Initializable {
     }
 
 
-    /**
-     * Fill the listView with the list asked before to the server.
-     *
-     * @param newList data list to be placed in the listView.
-     * @throws IOException            the io exception
-     * @throws ClassNotFoundException the class not found exception
-     */
-    public void fillMailList(List<Email> newList) throws IOException, ClassNotFoundException {
 
+    /** Riempie la listView con la lista richiesta prima al server */
+    public void fillMailList(List<Email> newList) throws IOException, ClassNotFoundException {
 
         for (Email mailRead : newList) {
             mailList.getItems().add(mailRead.getData() + " - " + mailRead.getMittente() + " - " + mailRead.getOggetto());
             list.add(mailRead);
         }
+
     }
 
-    /**
-     * Method for counting the number of mails that an user has displayed in the listView.
-     *
-     * @return size of the list.
-     */
+    /** Conta il numero di mail visualizzato nella listView di un User */
     public int countDisplayed() {
         return mailList.getItems().size();
     }
 
 
     /**
-     * Asks the server to check for new mails.
-     * Sends an alert with the number of new mails received from the last check, if it's at least one.
-     */
+     * Chiede al server di controllare se ci sono nuove email
+     * Manda un allert con il numero di nuove mail ricevute dall'ultimo controllo
+     * */
     public void checkNewMails() {
         try {
             int tmpSize = 0;
             String lastMailDate = "";
             if(!list.isEmpty())
-                lastMailDate = list.get(list.size() - 1).getData();
+                lastMailDate = list.get(list.size() - 1).getData();//controlla la data dell'ultima mail
 
-            ClientMethods.lastDate = lastMailDate;
+            ClientMethods.lastDate = lastMailDate;//imposta la lastDate dell'user alla data dell'ultima mail
 
-            List<Email> listMail = ClientMethods.askMails();
+            List<Email> listMail = ClientMethods.askMails(); //lista di mail associate all'user chieste al server
+            /** controlla il numero di nuove mail*/
             if(lastMailDate.equals("")){
                 startNumMails = listMail.size();
             }else{
-                tmpSize = listMail.size();
-                startNumMails += tmpSize;
+                tmpSize = listMail.size();//numero di  nuove email
+                startNumMails += tmpSize;//aggiunge ne nuove email al conteggio totale
             }
 
-            if (tmpSize != 0) { // If we have new mails
-                startAlert(tmpSize);
+            if (tmpSize != 0) { // Se abbiamo nuove mail
+                startAlert(tmpSize);//crea una finestra di avviso contenente il numero di nuove mail ricevute
                 fillMailList(listMail);
             } else if (tmpSize == 0) {
                 fillMailList(listMail);
@@ -232,36 +203,25 @@ public class MailListController implements Initializable {
         }
     }
 
-    /**
-     * Alert showing the number of new mails compared to the last time we checked.
-     *
-     * @param newMails number of new mails
-     */
+
+    /** Alert delle nuove email ricevute */
     public void startAlert(int newMails) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("New mail!");
-        alert.setHeaderText("You have " + newMails + " new Mails!");
+        alert.setTitle("Nuove EMAIL");
+        alert.setHeaderText("HAI RICEVUTO " + newMails + " nuove email!");
         alert.show();
     }
 
-    /**
-     * Method that shows an alert to the user with a message.
-     *
-     * @param msg the message to show
-     */
+    /** Alert di Errore */
     public static void startAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Error!");
+        alert.setTitle("Errore!");
         alert.setHeaderText(msg);
         alert.show();
     }
 
-    /**
-     * Initialization method
-     *
-     * @param url
-     * @param resourceBundle
-     */
+
+    /** Metodo di inizializzazione -> viene eseguito quando viene avviata la mailView page */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         answerMail.setVisible(false);
@@ -277,19 +237,29 @@ public class MailListController implements Initializable {
         aLabel.setVisible(false);
         objLabel.setVisible(false);
 
+        textMailUser.setText("Benvenuto " + ClientMethods.myUser.getEmail());
+
+
         try {
             List<Email> mailsToFill = new ArrayList<>();
             fillMailList(mailsToFill);
+
+            /**
+             * Creo un thread per avviare un'attività in backbround:
+             * controllare ogni 10 secondi l'arrivo di nuove email,
+             * aggiornare la lista e nel caso mandare la notifica della ricezione di nuove email
+             * */
             new Thread(() -> {
 
                 Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() { // Background task that checks for new mails every 10 seconds.
+                timer.scheduleAtFixedRate(new TimerTask() { // Creo una task di background
                     @Override
                     public void run() {
+                        //TODO non so come funzioni bene -> da controllare
                         Platform.runLater(() -> {
                             if(mutex == false) {
                                 checkNewMails();
-                                System.out.println("Mails Checked");
+                                System.out.println("Email controllate!");
                             }
                         });
                     }

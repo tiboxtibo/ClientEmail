@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
+//TODO penso sia il model
 public class FileQuery {
     private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 

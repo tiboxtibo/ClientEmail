@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+//TODO penso sia il model anche questo
 public class ClientMethods {
 
     public static Socket socket;
@@ -182,6 +183,8 @@ public class ClientMethods {
      * @throws IOException the io exception
      */
     public static void login(String mail, String pwd, Label errLabel) throws IOException {
+
+        //TODO
 
 
         errLabel.setVisible(false);
