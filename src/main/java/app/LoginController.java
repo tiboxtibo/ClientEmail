@@ -10,12 +10,9 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-/**
- * The type Login controller.
- */
+
+/** Login Controller */
 public class LoginController {
-
-
 
     @FXML
     private TextField userTextField;
@@ -26,57 +23,43 @@ public class LoginController {
 
 
 
-    /**
-     * Switch to mail view.
-     *
-     * @throws IOException the io exception
-     */
+
+    /** Cambia la visualizzazione con la mailView */
     @FXML
     public static void switchToMailView() throws IOException {
         ClientGUI.setRoot("mailview");
     }
 
-
-
     /**
-     * Event handler for the login button.
-     * Checks for null or empty strings.
-     * If login is valid, scene switches to mailview
-     *
-     * @param actionEvent the action event
-     * @throws IOException the io exception
-     */
+     * Even handler del bottone del login
+     * Controlla le stringhe vuote e la correttezza dell'indirizzo mail
+     * Se il login è valido cambia scena alla mailView
+     * */
     public void loginClick(ActionEvent actionEvent) throws IOException{
         if(userTextField.getText() == null || userTextField.getText().trim().isEmpty() || pwdTextField.getText() == null || pwdTextField.getText().trim().isEmpty() ) {
-            errLabel.setText("Fields must not be empty");
+            errLabel.setText("I campi non devono essere vuoti");
             errLabel.setVisible(true);
-        }else if(emailCheck())
+        }else if(emailCheck())//la mail ha un formato corretto
             ClientMethods.login(userTextField.getText(), pwdTextField.getText(), errLabel);
     }
 
-    /**
-     * The pattern of characters for the mail check.
-     * Accepts any combination of a-Z characters and 0-9 numbers.
-     * Must be of type combination@combination.combination
-     * Example can be lupoandrea98@gmail.com
-     */
-    public static Pattern validateEmail = Pattern.compile("[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$", Pattern.CASE_INSENSITIVE);
 
     /**
-     * Check if mail is valid using the pattern above.
-     * If the mail does not match the pattern, we show an error on the UI with errLabel.
-     *
-     * @return if mail exist or not
-     */
+     * Il pattern dei caratteri accetta ogni combinazione c di lettere e numeri
+     * es: c@c.c  ->  matteo@gmail.com
+     * */
+    public static Pattern validateEmail = Pattern.compile("[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$", Pattern.CASE_INSENSITIVE);
+
+    /** Controlla che la email rispetti il seguente pattern, altrimenti ritorna un errore */
     public boolean emailCheck() {
         String email = userTextField.getText();
         if (!email.matches(String.valueOf(validateEmail))) {
-            errLabel.setText("Invalid email address");
+            errLabel.setText("Indirizzo email NON valido");
             errLabel.setVisible(true);
             return false;
         }
         errLabel.setVisible(false);
-        errLabel.setText("User not found.");
+        errLabel.setText("Utente NON trovato");
         return true;
     }
 }

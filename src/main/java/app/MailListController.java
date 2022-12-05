@@ -268,7 +268,7 @@ public class MailListController implements Initializable {
             }).start();
 
         } catch (ConnectException ce){
-            System.out.println("Server is offline");
+            System.out.println("Il Server è offline");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
