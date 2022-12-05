@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="503.0" prefWidth="854.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.LoginController">
+    <children>
+        <AnchorPane prefHeight="503.0" prefWidth="450.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+              <ImageView fitHeight="439.0" fitWidth="820.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                      <Image url="@../images/img.png" />
+                  </image>
+              </ImageView>
+
+              <Label alignment="CENTER" layoutY="463.0" prefHeight="23.0" prefWidth="186.0" text="Design by Matteo Tiboldo" textFill="#5b5a5a" AnchorPane.bottomAnchor="16.80000000000001">
+                  <font>
+                      <Font name="Segoe UI" size="12.0" />
+                  </font>
+              </Label>
+
+
+            </children>
+        </AnchorPane>
+        <Pane layoutX="488.0" layoutY="166.0" prefHeight="177.0" prefWidth="283.0" AnchorPane.bottomAnchor="160.0" AnchorPane.topAnchor="166.0">
+
+            <children>
+
+                <TextField fx:id="userTextField" layoutX="7.0" prefHeight="34.0" prefWidth="275.0" promptText="email" styleClass="textFieldLogin" stylesheets="@login.css" />
+                <PasswordField fx:id="pwdTextField" layoutX="7.0" layoutY="61.0" prefHeight="34.0" prefWidth="275.0" promptText="password" styleClass="textFieldLogin" stylesheets="@login.css" />
+                <Button fx:id="loginBtn" layoutX="77.0" layoutY="118.0" mnemonicParsing="false" onAction="#loginClick" prefHeight="34.0" prefWidth="137.0" styleClass="buttonLogin" stylesheets="@login.css" text="Login" />
+                <Label fx:id="errLabel" alignment="CENTER" layoutX="8.0" layoutY="95.0" prefHeight="23.0" prefWidth="275.0" textFill="#ff0029">
+                    <font>
+                        <Font name="Segoe UI" size="10.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+      <Label alignment="CENTER" layoutX="502.0" layoutY="85.0" prefHeight="52.0" prefWidth="256.0" styleClass="textLogin" stylesheets="@login.css" text="Login" textFill="#000000">
+         <font>
+            <Font name="Segoe UI" size="42.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

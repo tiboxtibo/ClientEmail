@@ -1,0 +1,96 @@
+
+
+
+
+
+
+
+
+
+.btn-toolset {
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    color: #FFFFFF;
+    text-decoration: none;
+    line-height: 1.2;
+    font-weight: normal;
+    font-family: sans-serif;
+    font-size: 18px;
+    background-color: #FF0000;
+    border-radius: 30px;
+    padding: 9px 31px;
+    border: 2px solid #FFFFFF;
+    cursor: pointer;
+}
+.btn-toolset:hover {
+    background-color: #FF5C31;
+    border-color: #B3B3B3;
+}
+.btn-toolset > strong {
+    font-size: 14px;
+}
+.scritta{
+    -fx-font-family: "Roboto Light";
+    -fx-font-size: 11pt;
+    -fx-text-fill: #000000;
+}
+
+.scrittaHeader{
+    -fx-font-weight: bold;
+}
+
+.btn{
+    -fx-background-color: transparent;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 10;
+    /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );*/
+    -fx-padding: 3 30 3 30;
+    -fx-text-fill: black;
+    -fx-font-family: "Roboto Light";
+    -fx-font-size: 12px;
+    -fx-opacity: 0.7;
+}
+
+
+.btn:hover {
+    -fx-background-color: transparent;
+    -fx-opacity: 1;
+}
+
+.btnBig{
+    -fx-background-color: #588B8B;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 10;
+    /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );*/
+    -fx-padding: 3 30 3 30;
+    -fx-text-fill: black;
+    -fx-font-family: "Roboto Light";
+    -fx-font-size: 12px;
+}
+
+
+.btnBig:hover {
+    -fx-background-color: #7FADAD;
+}
+
+
+.background{
+    -fx-background-color: white;
+}
+
+.campoTesto{
+    -fx-background-color: white;
+    -fx-border-color: #b3b3b3;
+    -fx-border-radius: 10;
+}
+
+.text-area{
+    text-area-background: white;
+}
+
+
+.text-area .content {
+    -fx-background-color: text-area-background ;
+}
+

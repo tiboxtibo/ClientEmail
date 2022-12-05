@@ -1,0 +1,27 @@
+.buttonLogin{
+    -fx-background-color: #fc5b5b;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 15;
+    -fx-padding: 3 30 3 30;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+
+}
+
+
+.buttonLogin:hover {
+    -fx-background-color: #ff2828;
+    -fx-text-fill: #ffffff;
+}
+
+.textFieldLogin {
+    -fx-background-radius: 15;
+
+}
+
+.textLogin{
+    -fx-font-family: 'Poppins', serif;
+    -fx-font-size: 40px;
+}
+
