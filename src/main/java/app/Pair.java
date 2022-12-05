@@ -3,7 +3,8 @@ package app;
 import java.io.Serializable;
 
 public class Pair implements Serializable {
-    private Object obj1;
+    //TODO da completare bene la descrizione per cosa viene usato
+    private Object obj1;//viene usato come id dell'istruzione che dobbiamo compiere con la mail nell'obj2
     private Object obj2;
 
     public Pair(Object obj1, Object obj2) {

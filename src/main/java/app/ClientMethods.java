@@ -14,151 +14,134 @@ import java.util.List;
 
 
 //TODO penso sia il model anche questo
+/** Model per le operazioni compiute dai clienti*/
 public class ClientMethods {
 
     public static Socket socket;
 
-    /**
-     * Object that we take from the inputStream and use to check for a valid user
-     */
+    //Oggettto preso dall'imputStream per verificare la validità di un User
     public static Object obj;
+
     public static User myUser;
     private static List<Email> emailList = new ArrayList<>();
     public static String lastDate = "";
     private static ObjectOutputStream outputStream = null;
     private static ObjectInputStream inputStream = null;
-    private static String host = "127.0.0.1";
-    private static int port = 5566;
+    private static String host = "127.0.0.1";//locahost
+    private static int port = 5566;//porta scelta a caso
+
 
 
     /**
-     * Send mail to the server that checks if at least one user exist.
-     * Method to send mails to others.
-     * Server checks for valid recipients and only sends the mail if at least one is valid.
-     * Launches an error alert in case of 0 valid recipients.
-     * Returns true or false based on if the mail was sent or not.
-     *
-     * @param mail Mail to send
-     * @return if mail was sent by checking if at least one user exist
-     * @throws IOException  the io exception
-     * @throws EOFException the eof exception
-     */
+     * Metodo per mandare mail agli altri utenti
+     * manda una mail al server e controlla se almeno un user esiste
+     * il server manda la mail solo se c'è almeno un destinatario valido, nel caso segna errore
+     * restituisce true se la mail viene mandata
+     * */
     public static Boolean sendMail(Email mail) throws IOException, EOFException {
 
         boolean sent = false;
 
-        Socket sendSocket = new Socket(host, port); // New connection on port 5566
+        Socket sendSocket = new Socket(host, port); //Nuova connessione nella porta 5566
         try {
-            MailListController.mutex = true; // Flag variable (Mutual Exclusion) to block the program from refreshing the mail list while we do other operations on the server.
-            outputStream = new ObjectOutputStream(sendSocket.getOutputStream()); // What we send to the server
+            MailListController.mutex = true;//variabile di Mutua esclusione per bloccare il programma dal ricaricare la lista delle email mentre stiamo facendo altre operazioni sul server
+            outputStream = new ObjectOutputStream(sendSocket.getOutputStream()); //è ciò che mandiamo al server
             //outputStream.flush();
-            Pair p = new Pair(3, mail); // Pair to be sent to the server --> 3 is the index for the send method, mail the mail to be sent
-            outputStream.writeObject(p); // Send pair to server
-            inputStream = new ObjectInputStream(sendSocket.getInputStream());  // Socket input stream
+            /**Creo una coppia che lega la mail ad un id, in questo caso l'id è legato all'operazione che dobbiamo compiere con questa email */
+            Pair p = new Pair(3, mail); //3 è l'id per l'invio di una mail
+            outputStream.writeObject(p); // manda la coppia email-id al server
+            inputStream = new ObjectInputStream(sendSocket.getInputStream());  //prendo l'input stream del socket
             try {
                 obj = inputStream.readObject();
-                if (obj instanceof Pair) { // result of the send method
+                if (obj instanceof Pair) { //se l'oggetto contenuto nell'inputstream è una coppia
                     Pair res = (Pair) obj; // Response from server
-                    if (((Boolean) res.getObj1())) { // if sent to everyone
-                        startAlert("Mail sent succesfully!");
+                    if (((Boolean) res.getObj1())) { //se obj1 è true -> allora è stata inviata a tutti i destinatari
+                        startAlert("Mail inviata con Successo!");
                         sent = true;
-                    } else{ // false --> mail not sent to everyone
-                        startAlert((List<String>) res.getObj2()); // obj2 --> list of the recipients that not received the mail
+                    } else{ // false --> la mail non è stata inviata a tutti
+                        startAlert((List<String>) res.getObj2()); //Creo un alert con la lista dei destinatari che non ha ricevuto la mail -> che sono contenuti in obj2
                     }
                 }
             } catch (EOFException exc) {
                 System.out.println(exc);
             }
         } catch (ConnectException ce) {
-            MailListController.startAlert("Server is offline, trying to reconnect.");
+            MailListController.startAlert("Server Offline, prova a riconnetterti!");
         } catch (SocketException se) {
             se.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            MailListController.mutex = false;
+            MailListController.mutex = false;//libero la mutua esclusione
             outputStream.flush();
             outputStream.close();
 
         }
         sendSocket.close();
-        return sent;
+        return sent;//ritorno true o false in base se ho inviato la mail o meno
     }
 
-    /**
-     * Ask the server to delete a mail by its id.
-     * Returns true or false based on if operation was successful
-     *
-     * @param mailId the mail id
-     * @return if deleted succesfully.
-     * @throws IOException  the io exception
-     * @throws EOFException the eof exception
-     */
+
+    /** Chiedo al server di eliminare una mail dal suo id -> restituisce true o false in base all'esito dell'operaizone */
     public static void deleteMail(int mailId) throws IOException, EOFException {
 
-        Socket sendSocket = new Socket(host, port);
+        Socket sendSocket = new Socket(host, port);//Nuova connessione alla porta 5566
         try {
-            MailListController.mutex = true;
-            emailList = FileQuery.readMailJSON(myUser);
-            outputStream = new ObjectOutputStream(sendSocket.getOutputStream());
+            MailListController.mutex = true;//setto la muta esclusione a true
+            emailList = FileQuery.readMailJSON(myUser);//leggo le mail dal file.txt in formato json di myuser
+            outputStream = new ObjectOutputStream(sendSocket.getOutputStream());//ciò che mando al server
             //outputStream.flush();
-            Pair p = new Pair(4, mailId); // Pair to be sent to the server --> 4 is the index for the delete method, mailid of the mail to be deleted
-            outputStream.writeObject(p);
-            inputStream = new ObjectInputStream(sendSocket.getInputStream());
+            Pair p = new Pair(4, mailId); //Coppia che mando al server -> obj1 contiene l'id dell operazione: 4 è l'id per il metodo delete
+            outputStream.writeObject(p);//scrivo la coppian nell'OutputStream
+            inputStream = new ObjectInputStream(sendSocket.getInputStream());//prendo l'input stream
             try {
-                obj = inputStream.readObject();
-                if (obj instanceof Boolean) {
+                obj = inputStream.readObject();//leggo l'input stream
+                if (obj instanceof Boolean) {//se obj1 è un booleano
                     Boolean res = (Boolean) obj;
-                    if (res)
-                        startAlert("Mail deleted succesfully");
+                    if (res)//se è true
+                        startAlert("Mail Cancellata con successo!");
                     else
-                        startAlert("Mail not deleted");
+                        startAlert("Mail NON cancellata");
                 }
             } catch (EOFException exc) {
                 System.out.println(exc);
             }
         } catch (ConnectException ce) {
-            MailListController.startAlert("Server is offline, trying to reconnect.");
+            MailListController.startAlert("Server Offline, prova a riconnetterti!");
         } catch (SocketException se) {
             se.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            MailListController.mutex = false;
+            MailListController.mutex = false;//libero la mutua esclusione
             outputStream.flush();
             outputStream.close();
 
         }
-        sendSocket.close();
+        sendSocket.close();//chiudo il socket
     }
 
 
-    /**
-     * Ask to the server the list of the mails.
-     * Server returns the list of emails associated to the user.
-     *
-     * @return the list of the mails.
-     * @throws IOException the io exception
-     */
+    /** Chiedo al server la lista delle mail associate all'user */
     public static List<Email> askMails() throws IOException {
 
         try {
-            if (socket.isClosed()) { // If socket is closed, we open it again.
+            if (socket.isClosed()) { //se il socket è stato chiuso lo riapriamo
                 socket = new Socket(host, port);
             }
 
-            emailList = FileQuery.readMailJSON(myUser);
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            emailList = FileQuery.readMailJSON(myUser);//leggo le mail di myuser contenute nel file txt in formato json
+            outputStream = new ObjectOutputStream(socket.getOutputStream());//ciò che mando al server
             //outputStream.flush();
-            Pair lastMailUser = new Pair(myUser, lastDate);
-            Pair p = new Pair(2, lastMailUser);
-            outputStream.writeObject(p);
-            inputStream = new ObjectInputStream(socket.getInputStream());
-            obj = inputStream.readObject();
-            emailList = (List<Email>) obj;
+            Pair lastMailUser = new Pair(myUser, lastDate);//creo la coppia myUser-lastDate
+            Pair p = new Pair(2, lastMailUser);//creo la coppia p, ob obj1-> l'id dell'operazione da fare ( 2->richiesta di mail )
+            outputStream.writeObject(p);//scrivo p in outputStream
+            inputStream = new ObjectInputStream(socket.getInputStream());//prendo l'inputstream
+            obj = inputStream.readObject();//leggo l'oggetto dall'inputstream
+            emailList = (List<Email>) obj;//ottengo la mailList di User
 
         } catch (ConnectException ce) {
-            MailListController.startAlert("Server is offline, trying to reconnect.");
+            MailListController.startAlert("Server Offline, prova a riconnetterti");
         } catch (SocketException se) {
             se.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -172,45 +155,33 @@ public class ClientMethods {
     }
 
 
-    /**
-     * Login method.
-     * Checks if the combination of email and password is valid.
-     * Goes to the MailView scene if it is, otherwise shows an error.
-     *
-     * @param mail     user's mail
-     * @param pwd      user's pwd
-     * @param errLabel the error label if user not exist.
-     * @throws IOException the io exception
-     */
+    /** Controlla se la mail e la password sono validi, e visualizza la pagina mailView in caso positivo  */
     public static void login(String mail, String pwd, Label errLabel) throws IOException {
-
-        //TODO
-
 
         errLabel.setVisible(false);
 
         try {
-            socket = new Socket(host, port);
-            System.out.println("Client connected to the server.");
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            Pair p = new Pair(1, mail + "," + pwd);
-            outputStream.writeObject(p);
-            outputStream.flush();
-            inputStream = new ObjectInputStream(socket.getInputStream());
-            obj = inputStream.readObject();
-            if (obj instanceof User) { //If valid user
-                myUser = (User) obj;
-                LoginController.switchToMailView(); // Goes to MailView
-            } else if (obj instanceof Boolean) { // Else show error label.
-                errLabel.setVisible(true);
+            socket = new Socket(host, port);//apre la connessione al socket
+            System.out.println("Client connesso al server");
+            outputStream = new ObjectOutputStream(socket.getOutputStream());//prende l'outputStream del server -> dove andiamo a scrivere
+            Pair p = new Pair(1, mail + "," + pwd);//creo una coppia con obj1 l'id dell'operazione (1->login)
+            outputStream.writeObject(p);//scrivo in outputstream
+            outputStream.flush();//non fa nulla -> //TODO da commentare perchè in teoria non fa nulla
+            inputStream = new ObjectInputStream(socket.getInputStream());//prendo l'input stream
+            obj = inputStream.readObject();//leggo l'input stream
+            if (obj instanceof User) { //se obj è un User
+                myUser = (User) obj; //imposto myUser
+                LoginController.switchToMailView(); // setto la vista al mailview
+            } else if (obj instanceof Boolean) { // se è un boolean allora mando l'errore
+                errLabel.setVisible(true);//rendo visibile il label di errore
                 socket.close();
-                MailListController.startAlert("Disconnected from the socket.");
+                MailListController.startAlert("Disconnesso dal socket!");
             }
             outputStream.close();
             inputStream.close();
             socket.close();
         } catch (ConnectException ce) {
-            MailListController.startAlert("Server is offline, trying to reconnect.");
+            MailListController.startAlert("Server Offline, prova a riconnetterti");
         } catch (SocketException se) {
             se.printStackTrace();
         } catch (IOException e) {
@@ -220,15 +191,12 @@ public class ClientMethods {
         }
     }
 
-    /**
-     * Method to send an alert to the user showing the list of invalid recipients when sending an email.
-     *
-     * @param notSent list of invalid users.
-     */
+
+    /** Manda un alert quando l'user manda una mail ad un destinatario non esistente */
     public static void startAlert(List<String> notSent) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Error!");
-        alert.setHeaderText("Recipient not found!");
+        alert.setTitle("Errore!");
+        alert.setHeaderText("Destinatario NON trovato!");
         String dests = "";
         for (int i = 0; i < notSent.size(); i++) {
             if(i == 0) dests += notSent.get(i);
@@ -238,11 +206,8 @@ public class ClientMethods {
         alert.show();
     }
 
-    /**
-     * General method used for sending alerts to the user.
-     *
-     * @param s message to be printed.
-     */
+
+    /** Metodo generale per mandare alert con la string s come avviso */
     public static void startAlert(String s) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(s);
