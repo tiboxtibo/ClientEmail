@@ -7,30 +7,32 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
-//TODO penso sia il model
+/**
+ * Classe Query -> serve per interrogare (non un database, in questo caso) i file json
+ * per eliminare e salvare le email
+ * */
 public class FileQuery {
+
+     //Il ReentrantReadWriteLock è un implementazione del readWriteLock e serve
+     //per accedere in modo esclusivo alla lettura o scrittura di un file
     private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    /**
-     * Method that writes the mail list to a json file.
-     *
-     * @param emailList the email list
-     * @param user      the user
-     * @throws FileNotFoundException the file not found exception
-     */
+    /** Metodo che scrive la mailList in un file Json in modo da poterle salvare */
     public static void writeMailListJSON(List<Email> emailList, User user) throws FileNotFoundException {
-        readWriteLock.writeLock().lock();
+        readWriteLock.writeLock().lock();//acquisizione del lock di write
         try {
-            JsonArrayBuilder mailListBuilder = Json.createArrayBuilder();
+            JsonArrayBuilder mailListBuilder = Json.createArrayBuilder();//builder per creare un array di oggetti json
 
             for (Email e : emailList) {
 
                 JsonObjectBuilder mailBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder destsBuilder = Json.createArrayBuilder();
 
+                //aggiungo tutti i destinatari ad un arrayJson
                 for (int i = 0; i < e.destinatari.size(); i++) {
                     destsBuilder.add(e.destinatari.get(i).substring(1,e.destinatari.get(i).toString().length()-1));
                 }
+                //inserisco tutti gli elementi della mail all'interno di un oggetto json
                 mailBuilder.add("id", e.id)
                         .add("mittente", e.mittente)
                         .add("destinatari", destsBuilder)
@@ -38,46 +40,39 @@ public class FileQuery {
                         .add("testo", e.testo)
                         .add("data", e.data);
 
+                //inserisco l'oggetto json all'interno dell'array json
                 mailListBuilder.add(mailBuilder);
             }
-            JsonArray mailJsonObj = mailListBuilder.build();
+            JsonArray mailJsonObj = mailListBuilder.build();//costruisco tale array
+            //creo un nuovo file (o lo sovrascrivo) e lo salvo all'interno della cartella riservata all'utente
+            //che differenzio in base all'id
             OutputStream os = new FileOutputStream(user.userFolder() + "/ricevute.json");
 
             JsonWriter jsonWriter = Json.createWriter(os);
-            /**
-             * We can get JsonWriter from JsonWriterFactory also
-             * JsonWriterFactory factory = Json.createWriterFactory(null);
-             * jsonWriter = factory.createWriter(os);
-             */
-            jsonWriter.writeArray(mailJsonObj);
+            jsonWriter.writeArray(mailJsonObj);//per scrivere infine l'array json all'interno del file
             jsonWriter.close();
         } finally {
-            readWriteLock.writeLock().unlock();
+            readWriteLock.writeLock().unlock();//libero il lock
         }
 
     }
 
-    /**
-     * Read json file and return the mail list.
-     *
-     * @param user the user
-     * @return the mail list
-     * @throws IOException the io exception
-     */
+
+    /** Leggo il file json e restituisco la lista di mail, in base all'user passato */
     public static List<Email> readMailJSON(User user) throws IOException {
 
         List<Email> newMailList = new ArrayList<>();
         File file = new File(user.userFolder() + "/ricevute.json");
 
-        readWriteLock.readLock().lock();
+        readWriteLock.readLock().lock();//acquisisco il lock di read
         try {
             if(file.length()!= 0) {
 
-                InputStream fis = new FileInputStream(file);
+                InputStream fis = new FileInputStream(file);//leggo il file
                 JsonReader jsonReader = Json.createReader(fis);
-                JsonArray jsonArray = jsonReader.readArray();
-                //we can close IO resource and JsonReader now
-                fis.close();
+                JsonArray jsonArray = jsonReader.readArray();//leggo l'array json
+
+                fis.close();//qui possiamo già chiudere la risorsa di lettura -> JsonReader
 
                 for (int i = 0; i < jsonArray.size(); i++) {
                     JsonObject mail = jsonArray.getJsonObject(i);
