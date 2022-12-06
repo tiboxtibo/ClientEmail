@@ -51,7 +51,7 @@ public class MailListController implements Initializable {
         /**Se la mail selezionata non è null allora eseguo tutti i bindings e rendo visibii i dettagli e i nuovi pulsanti */
         if (currentMail != null) {
             mittenteLabel.setText(currentMail.getMittente());
-            destLabel.setText(currentMail.destinatariToString().replace("\"", ""));
+            destLabel.setText(currentMail.destinatariToString().replace("\"", ""));//per eliminare le virgolette "a@a.a"
             oggettoLabel.setText(currentMail.getOggetto());
             dataLabel.setText(currentMail.getData());
             textLabel.setText(currentMail.getTesto());
@@ -195,7 +195,7 @@ public class MailListController implements Initializable {
             }
 
         }catch (ConnectException ce){
-            System.out.println("Server is offline");
+            System.out.println("Il server è offline");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

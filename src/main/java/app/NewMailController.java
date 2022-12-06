@@ -38,6 +38,7 @@ public class NewMailController implements Initializable {
     public void sendMail(ActionEvent actionEvent) {
         //FXML variables initialization
         String dests = destField.getText();
+
         String ogg = oggettoField.getText();
         String text = textField.getText();
 

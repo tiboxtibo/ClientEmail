@@ -153,6 +153,7 @@ public class ServerController implements Initializable {
                             case 3:  //Invia una mail -> data una mail da mandare, leggi tutte le altre nel json e aggiungi la mail da mandare al file json
                                 Email newMail = (Email) p.getObj2(); //prendi l'obj2 che contine la mail da mandare
                                 List<String> dests = newMail.getDestinatari(); //estraggo i destinatari
+
                                 boolean allSent = true;
                                 Pair result = null;
                                 List<String> notSentDests = new ArrayList<>();
@@ -173,6 +174,7 @@ public class ServerController implements Initializable {
                                     }
                                 }
                                 newMail.setDestinatario(sentDests);//setta il destinatario alla nuova mail
+
                                 for (User u : sentUser){//per ogni user trovato nell'elenco dei destinatari
                                         emails = FileQuery.readMailJSON(u);//TODO legge l'elenco delle mail di user u dal file json
                                         int lastID = 0;
@@ -180,6 +182,7 @@ public class ServerController implements Initializable {
                                             lastID = emails.get(emails.size()-1).getId() + 1;
                                         newMail.setId(lastID);//setto il nuovo id -> se l'elenco è vuoto è uguale a zero
                                         emails.add(newMail);//aggiungo la nuova email
+
                                         FileQuery.writeMailListJSON(emails, u);//scrivo il nuovo elenco di user con la nuova mail aggiunta
                                 }
 
