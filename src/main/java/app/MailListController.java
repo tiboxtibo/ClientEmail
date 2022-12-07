@@ -31,7 +31,7 @@ public class MailListController implements Initializable {
     private ArrayList<Email> list = new ArrayList<Email>();
 
     @FXML
-    public TextArea textMailUser;
+    public Label textMailUser;
 
     private Email currentMail;
     private int hashIndex = 0;
