@@ -8,14 +8,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * JavaFX App
- */
+/** JavaFX App */
 public class ServerGUI extends Application {
 
     private static Scene scene;
 
-    // Initialization for UI
+    //Inizializzazione dell'UI
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ServerGUI.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
@@ -26,10 +24,10 @@ public class ServerGUI extends Application {
         launch();
     }
 
-    // start DELLA SCENA
+    /** Start DELLA SCENA */
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("server"), 640, 480); // imposto il file fxml del server
+        scene = new Scene(loadFXML("server"), 640, 480); // imposto il file fxml del server (e setto le dimensioni)
         stage.setScene(scene);
         stage.show();//e successivamente lo visualizzo
     }

@@ -9,14 +9,14 @@
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" styleClass="background" stylesheets="@mailview.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.MailListController">
 
     <children>
-        <VBox prefHeight="400.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
+        <VBox prefHeight="479.0" prefWidth="364.0" HBox.hgrow="ALWAYS">
             <children>
             <Label fx:id="textMailUser" prefHeight="15.0" prefWidth="206.0" styleClass="labelMailView" stylesheets="@mailview.css" text="Benvenuto">
                <VBox.margin>
                   <Insets left="10.0" top="10.0" />
                </VBox.margin>
             </Label>
-                <ListView fx:id="mailList" onMouseClicked="#handleMouseClick" prefHeight="343.0" prefWidth="250.0" styleClass="listViewMailView" stylesheets="@mailview.css">
+                <ListView fx:id="mailList" onMouseClicked="#handleMouseClick" prefHeight="343.0" prefWidth="340.0" styleClass="listViewMailView" stylesheets="@mailview.css">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
@@ -43,8 +43,8 @@
         <GridPane prefHeight="400.0" prefWidth="411.0" HBox.hgrow="ALWAYS">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="55.2" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.2" minWidth="10.0" prefWidth="228.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.4000305175781" minWidth="10.0" prefWidth="105.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.2" minWidth="10.0" prefWidth="251.60000000000002" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.4000305175781" minWidth="10.0" prefWidth="101.19999999999999" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
@@ -63,7 +63,7 @@
             <RowConstraints maxHeight="232.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="148.0" prefWidth="217.0" styleClass="text-area" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="159.0" prefWidth="90.0" styleClass="text-area" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
                <content>
                       <Label id="Body" fx:id="textLabel" minHeight="-Infinity" minWidth="-Infinity" styleClass="labelMailView1" stylesheets="@mailview.css" text="Testo">
                      <padding>

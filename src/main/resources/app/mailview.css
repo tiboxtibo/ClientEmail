@@ -79,6 +79,12 @@
 
 }
 
+.campoTesto{
+    -fx-background-color: white;
+    -fx-border-color: #b3b3b3;
+    -fx-border-radius: 10;
+}
+
 
 
 

@@ -5,14 +5,16 @@
 }
 
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
-    -fx-background-color: linear-gradient(#ff5959 0%, #fc4949 25%, #ff3737 75%, #ff2828 100%);
-    -fx-text-fill: white;
+    -fx-background-color: #000000;
+    -fx-text-fill: #16ff38;
 }
 
 .list-cell:even {
-    -fx-background-color: #00ff00;
+    -fx-background-color: #000000;
+    -fx-text-fill: #16ff38;
 }
 .list-cell:odd {
-    -fx-background-color: #0000ff;
+    -fx-background-color: #000000;
+    -fx-text-fill: #16ff38;
 }
 

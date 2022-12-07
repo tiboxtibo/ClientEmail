@@ -16,29 +16,26 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/**
- *  Server controller.
- */
+/** Server controller */
 public class ServerController implements Initializable {
 
 
     public static ArrayList<PairSocketUser> clients; //ArrayList che lega un socket ad un user
 
     private HashMap<Integer, List<Email>> mailLists; //hashMap salva gli elementi in coppie chiave/valore
+
     public User myUser = null; //variabile globale dove salverò i dati dell'utente dopo il login
 
     @FXML
     public ListView listLog; //è legato ad un valore nell'file fxml, in questo caso serve per visualizzare gli output del server
 
-    private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(); //lock per eseguire le operazioni lettura/scrittura in muta esclusione
 
     /**
-     * Start the socket for the server and starts accepting all the clients.
-     * Create a new thread for each app.client.
-     */
-
-    /** Creazione di un nuovo socket mediante l'uso dei thread */
-    //per permettere a più client di connettersi contemporaneamente
+     * Creazione di un nuovo socket mediante l'uso dei thread
+     * per permettere a più client di connettersi contemporaneamente
+     * */
     public void socketThreadStart() {
         try {
             ServerSocket s = new ServerSocket(5566);//la porta l'ho scelta a caso, in modo che non andasse ad interferire con altri processi (ad esempio la porta 8080)
@@ -54,10 +51,15 @@ public class ServerController implements Initializable {
                     public void run() {
 
                         //TODO da vedere
+                        /** runLater. Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future.
+                         *  This method, which may be called from any thread,
+                         *  will post the Runnable to an event queue and then return immediately to the caller.
+                         *  The Runnables are executed in the order they are posted.
+                         *  https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html*/
                         Platform.runLater(() -> {
                             try {
                                 clients.add(new PairSocketUser(incoming, null));//aggiungo un clients, il cui username è al momento nullo ma mi serve a salvare la coppia socket-user
-                                ThreadHandler(incoming, finalI);
+                                ThreadHandler(incoming, finalI);//chiamo il ThreadHandler a cui passo il socket e il contatore (che conta il numero di thrad avviati)
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (ClassNotFoundException e) {
@@ -74,38 +76,38 @@ public class ServerController implements Initializable {
         }
     }
 
-
+    /** Metodo di inizializzazione -> avvia un nuovo thread  */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         new Thread(() -> socketThreadStart()).start();
     }
 
     /**
-     * How the server handles app.client requests.
-     * ReentrantReadWriteLock are for mutex. You can't do multiple operations on the same file at the same time.
-     * Switch case changes to the number request from the app.client in the pair:
-     * <1- Login request> <2 - Request mail list> <3 - Request to send a new mail> <4 - Request to delete a mail>
-     *
-     * @param incoming the incoming Socket
-     * @param index    the number of the socket
-     * @throws IOException            the io exception
-     * @throws ClassNotFoundException the class not found exception
-     */
+     * ThreadHandler serve per catturare le richieste del Client
+     * Usiamo il ReentrantReadWriteLock per la mutua esclusione per la lettura/scrittura
+     * Possiamo fare quindi più operazioni contemporaneamente allo stesso file
+     * Le operazioni sono così gestite:
+     *  1)Login
+     *  2)Richiesta di mail
+     *  3)Richiesta di invio di una mail
+     *  4)Richiesta di eliminare una mail
+     * */
     public void ThreadHandler(Socket incoming, int index) throws IOException, ClassNotFoundException {
+        //incoming->incoming Socket, index->numero del socket
 
         ObjectInputStream inStream = new ObjectInputStream(incoming.getInputStream());//prendo l'imput dal socket
         ObjectOutputStream outStream = new ObjectOutputStream(incoming.getOutputStream());//prendo l'output del socket
         outStream.flush();
 
-        if (!incoming.isClosed()) {//se il socket non è chiuso
+        if (!incoming.isClosed()) {//se il socket NON è chiuso
             try {
                 while (true) {
-                    Object obj = inStream.readObject();//leggo l'oggetto in input
+                    Object obj = inStream.readObject();//leggo l'input stream del socket
 
-                    if (obj instanceof Pair) {//se l'oggetto è una coppia
+                    if (obj instanceof Pair) {//se l'oggetto è una coppia -> in obj1 c'è sempre l'istruzione da eseguire, in obj2 dipende in base dall'operazione da effettuare
                         Pair p = (Pair) obj;
-                        switch ((Integer) p.getObj1()) {//faccio lo switch di obj1, ovvero idUtente TODO non penso sia l'idUtente ma una sorta di azione da svolgere
+                        switch ((Integer) p.getObj1()) {//faccio lo switch di obj1, ovvero dell'operazione da effettuare
 
-                            case 1:       //Caso Login --> data la mail e la password dal client, controlla che l'user esiste se è uguale 0
+                            case 1:       /** Caso Login --> Verifica la mail e la password e restituisce l'UserId se esiste, altrimenti 0*/
                                 String[] split = ((String) p.getObj2()).split(",");//obj2 contiene la mail e la password separate da ,
 
                                 //split[0]->mail split[1]->password
@@ -119,7 +121,8 @@ public class ServerController implements Initializable {
                                     //salvo dentro la lista clients (che lega un socket e un user)
                                     ServerController.clients.set(index - 1, new PairSocketUser(ServerController.clients.get(index - 1).socket, user));
 
-                                    printOnLog("Login by " + incoming.getInetAddress());//stampo sul terminale del server l'indirizzo a cui è connesso il socket
+                                    //TODO chiedere se va bene stampare incoming.getInetAddress(), o è meglio stampare la mail dell'user
+                                    printOnLog("Login by " + incoming.getInetAddress() + " UserEmail: " + myUser.getEmail());//stampo sul terminale del server l'indirizzo a cui è connesso il socket
                                     outStream.writeObject(user);//TODO scrivo nell'output del socket
                                 } else {
                                     outStream.writeObject(false);
@@ -202,7 +205,8 @@ public class ServerController implements Initializable {
                                 int mailId = (int) p.getObj2();//prendo il mailid da getObj2
                                 Boolean res = false;
                                 res = FileQuery.deleteMail(myUser, mailId);
-                                printOnLog("Mail ID: "+ mailId + " eliminata da" + incoming.getInetAddress());//stampo sul terminale del server
+                                //TODO chiedere se va bene stampare incoming.getInetAddress(), o è meglio stampare la mail dell'user
+                                printOnLog("Mail ID: "+ mailId + " eliminata da: " + incoming.getInetAddress() + " UserEmail: " + myUser.getEmail());//stampo sul terminale del server
                                 outStream.flush();
                                 outStream.writeObject(res);//mando il risultato in outputSream sul socket
                                 break;
@@ -221,7 +225,7 @@ public class ServerController implements Initializable {
                 outStream.close();
                 inStream.close();
             }
-        } else System.out.println("Socket not closed");
+        } else System.out.println("Socket NON chiuso");
 
     }
 
