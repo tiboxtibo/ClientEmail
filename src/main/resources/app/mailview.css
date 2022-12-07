@@ -1,4 +1,47 @@
+.buttonMailView{
+    -fx-background-color: #fc5b5b;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 15;
+    -fx-padding: 3 10 3 10;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
 
+}
+
+
+.buttonMailView:hover {
+    -fx-background-color: #ff2828;
+    -fx-text-fill: #ffffff;
+}
+
+.buttonMailViewNewMail {
+    -fx-background-color: #fc5b5b;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 15;
+    -fx-padding: 3 10 3 10;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+}
+.buttonMailViewNewMail:hover{
+    -fx-background-color: #ff2828;
+    -fx-text-fill: #ffffff;
+}
+
+.buttonMailViewRefresh {
+    -fx-background-color: #fc5b5b;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 15;
+    -fx-padding: 3 10 3 10;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 12px;
+}
+.buttonMailViewRefresh:hover{
+    -fx-background-color: #ff2828;
+    -fx-text-fill: #ffffff;
+}
 
 
 

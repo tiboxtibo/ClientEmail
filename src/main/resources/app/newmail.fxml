@@ -3,9 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.NewMailController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@mailview.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.NewMailController">
     <children>
-        <GridPane prefHeight="400.0" prefWidth="745.0" styleClass="background" stylesheets="@style.css">
+        <GridPane prefHeight="400.0" prefWidth="745.0" styleClass="background" stylesheets="@mailview.css">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="62.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="263.0" />
@@ -30,12 +30,12 @@
                 <RowConstraints maxHeight="232.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label stylesheets="@style.css" text="A" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <Label stylesheets="@style.css" text="Oggetto" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                <Button fx:id="sendMail" mnemonicParsing="false" onAction="#sendMail" prefHeight="25.0" prefWidth="89.0" styleClass="btnBig" stylesheets="@style.css" text="Send" GridPane.columnIndex="3" GridPane.rowIndex="13" />
-                <TextField fx:id="destField" styleClass="campoTesto" stylesheets="@style.css" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                <TextField fx:id="oggettoField" styleClass="campoTesto" stylesheets="@style.css" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                <TextArea fx:id="textField" prefHeight="200.0" prefWidth="200.0" styleClass="campoTesto" stylesheets="@style.css" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                <Label stylesheets="@mailview.css" text="A" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label stylesheets="@mailview.css" text="Oggetto" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                <Button fx:id="sendMail" mnemonicParsing="false" onAction="#sendMail" prefHeight="25.0" prefWidth="89.0" styleClass="btnBig" stylesheets="@mailview.css" text="Send" GridPane.columnIndex="3" GridPane.rowIndex="13" />
+                <TextField fx:id="destField" styleClass="campoTesto" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <TextField fx:id="oggettoField" styleClass="campoTesto" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <TextArea fx:id="textField" prefHeight="200.0" prefWidth="200.0" styleClass="campoTesto" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.rowIndex="12" />
             </children>
         </GridPane>
     </children>
