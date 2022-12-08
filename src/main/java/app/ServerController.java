@@ -97,6 +97,10 @@ public class ServerController implements Initializable {
         new Thread(() -> socketThreadStart()).start();
     }
 
+
+    /**Def: Thread handlers are implemented in the main thread of an application and are primarily used to make updates
+     * to the user interface in response to messages sent by other threads running within the application's process. */
+
     /**
      * ThreadHandler serve per catturare le richieste del Client
      * Usiamo il ReentrantReadWriteLock per la mutua esclusione per la lettura/scrittura
