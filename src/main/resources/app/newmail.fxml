@@ -34,7 +34,7 @@
                 <Label styleClass="labelMailView" stylesheets="@mailview.css" text="Oggetto" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                 <Button fx:id="sendMail" mnemonicParsing="false" onAction="#sendMail" prefHeight="25.0" prefWidth="89.0" styleClass="buttonMailView" stylesheets="@mailview.css" text="Send" GridPane.columnIndex="3" GridPane.rowIndex="13" />
                 <TextField fx:id="destField" styleClass="labelMailView1" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                <TextField fx:id="oggettoField"  styleClass="labelMailView1" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <TextField fx:id="oggettoField" styleClass="labelMailView1" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                 <TextArea fx:id="textField" prefHeight="200.0" prefWidth="200.0" styleClass="campoTesto" stylesheets="@mailview.css" GridPane.columnIndex="1" GridPane.rowIndex="12" />
             </children>
         </GridPane>

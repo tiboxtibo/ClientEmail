@@ -45,9 +45,6 @@ public class MailListController implements Initializable {
         hashIndex = mailList.getSelectionModel().getSelectedIndex();//seleziona l'index della mail nella list view
         currentMail = list.get(hashIndex);//prende la mail corrispondente all'hash index
 
-        //TODO chiedere se i binding così vanno bene o se devo usare obbligatoriamente la formula:
-        //visualizza.textProperty().bind(inserimento.textProperty())
-
         /**Se la mail selezionata non è null allora eseguo tutti i bindings e rendo visibii i dettagli e i nuovi pulsanti */
         if (currentMail != null) {
             mittenteLabel.setText(currentMail.getMittente());
@@ -93,10 +90,10 @@ public class MailListController implements Initializable {
         //metto in un array le mail dei destinatari che sono separate da una virgola
         String[] split = currentMail.destinatariToString().split(",");
         String tot = "";
-        //TODO capire questo -> probabilmente un errore che si verificava splittando le email
+
         for(int i = 0; i< split.length;i++){
-            String currSplit = split[i].replace("\"", "");
-            if(currSplit.equals(ClientMethods.myUser.getEmail())){//TODO riguardare
+            String currSplit = split[i].replace("\"", "");//serve per eliminare le virgolette "
+            if(currSplit.equals(ClientMethods.myUser.getEmail())){
             }else{
                 tot += "," + currSplit ;
             }

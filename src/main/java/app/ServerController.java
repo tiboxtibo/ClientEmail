@@ -29,7 +29,7 @@ public class ServerController implements Initializable {
     @FXML
     public ListView listLog; //è legato ad un valore nell'file fxml, in questo caso serve per visualizzare gli output del server
 
-
+    //TODO capire bene il ReentrantReadWriteLock
     private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(); //lock per eseguire le operazioni lettura/scrittura in muta esclusione
 
     /**
@@ -40,7 +40,7 @@ public class ServerController implements Initializable {
         try {
             ServerSocket s = new ServerSocket(5566);//la porta l'ho scelta a caso, in modo che non andasse ad interferire con altri processi (ad esempio la porta 8080)
             clients = new ArrayList<>();
-            System.out.println("Creating socket on " + s.getLocalSocketAddress());
+            System.out.println("Creazione di un socket all'indirizzo: " + s.getLocalSocketAddress());
             int i = 1;
             while (true) {//creo un loop infinito per gestire i client che fanno richiesta di connessione al socket
                 int finalI = i;//contatore che viene poi passato al threadHandler
@@ -50,16 +50,32 @@ public class ServerController implements Initializable {
                     @Override
                     public void run() {
 
-                        //TODO da vedere
-                        /** runLater. Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future.
+                        //TODO Chiedere se la gestione della sincronizzazione tra i thread va bene se fatta con il metodo Platform.runLater(() -> {}) e con il ReentrantReadWriteLock per leggere e scrivere su file?
+                        /**
+                         * Quando un thread aggiorna la UI (User Interface) tale update deve essere eseguito nel main thread
+                         * (che esegue il metodo principale del programma e aggiorna gli elementi dell'interfaccia utente)
+                         * Il metodo  Platform.runLater(() -> {}) lo uso se voglio che qualcosa venga eseguito nel thread principale
+                         * Se non usassi tale metodo e avessi due thread che cercano di modificare l'interfaccia contemporaneamente avrei un errore a Runtime
+                         * quindi mettendo il metodo all'interno di Platform.runLater creerò una coda e assicurerò che i due tread non modifichino l'interfaccia
+                         * contemporaneamente
+                         * RunLater è come se fosse un sistema di coda, quindi metterà il thread in coda e lo eseguirà non appena potrà
+                         * Platform.runLater(() -> {}) viene usato nelle applicazioni di JavaFX poichè l'applicazione è il main Thread
+                         * runLater dice che verrà eseguito ad un tempo indefinito nel futuro, di solito esso viene eseguito immediatamente
+                         * a meno che il main thread non sia occupato, in questo caso il thread aspetterà il suo turno
+                         *  Fonte: https://www.youtube.com/watch?v=IOb9jJkKCZk
+                         *
+                         * */
+                        /**
+                         * runLater. Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future.
                          *  This method, which may be called from any thread,
                          *  will post the Runnable to an event queue and then return immediately to the caller.
                          *  The Runnables are executed in the order they are posted.
-                         *  https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html*/
+                         *  fonte: https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html
+                         *  */
                         Platform.runLater(() -> {
                             try {
                                 clients.add(new PairSocketUser(incoming, null));//aggiungo un clients, il cui username è al momento nullo ma mi serve a salvare la coppia socket-user
-                                ThreadHandler(incoming, finalI);//chiamo il ThreadHandler a cui passo il socket e il contatore (che conta il numero di thrad avviati)
+                                ThreadHandler(incoming, finalI);//chiamo il ThreadHandler a cui passo il socket e il contatore (che conta il numero di thrad avviati) -> dice al socket ciò che deve fare
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (ClassNotFoundException e) {
@@ -121,24 +137,24 @@ public class ServerController implements Initializable {
                                     //salvo dentro la lista clients (che lega un socket e un user)
                                     ServerController.clients.set(index - 1, new PairSocketUser(ServerController.clients.get(index - 1).socket, user));
 
-                                    //TODO chiedere se va bene stampare incoming.getInetAddress(), o è meglio stampare la mail dell'user
-                                    printOnLog("Login by " + incoming.getInetAddress() + " UserEmail: " + myUser.getEmail());//stampo sul terminale del server l'indirizzo a cui è connesso il socket
-                                    outStream.writeObject(user);//TODO scrivo nell'output del socket
+                                    //printOnLog("Login by " + incoming.getInetAddress() + " UserEmail: " + myUser.getEmail());//stampo sul terminale del server l'indirizzo a cui è connesso il socket
+                                    printOnLog("Login by " + myUser.getEmail());//stampo sul terminale del server l'indirizzo mail che ha effettuato l'accesso
+                                    outStream.writeObject(user);//Scrivo nell'output del socket
                                 } else {
                                     outStream.writeObject(false);
-                                    System.out.println("No user found");
+                                    System.out.println("Nessun User trovato!");
                                 }
                                 break;
 
-                            case 2: //richiesta di mail -> restituisce la lista di mail dell'user presa dal file
-                                Pair pReq = (Pair) p.getObj2();//prendo obj2
-                                myUser = (User) pReq.getObj1();//metto in myUser il contenuto di obj1, ovvero l'username utente
-                                String lastDate = (String) pReq.getObj2();//TODO metto in lastdate il contenuto di obj2, ovvero lastdate
+                            case 2: /** Caso Richiesta di mail -> restituisce la lista di mail dell'user presa dal file json*/
+                                Pair pReq = (Pair) p.getObj2();//prendo obj2 -> in questo caso è composto dalla coppia myUser-lastDate
+                                myUser = (User) pReq.getObj1();
+                                String lastDate = (String) pReq.getObj2();
                                 List<Email> newMails = new ArrayList<Email>();
-                                if(lastDate.equals("")){
+                                if(lastDate.equals("")){//se lastDate è vuota -> NON mi sono arrivate nuove email
                                     List<Email> listMail = FileQuery.readMailJSON(myUser);//leggo il file json e prendo le mail dell'user
                                     newMails = listMail;
-                                }else{
+                                }else{//se lastdate NON è vuota -> mi sono arrivate nuove email
                                     Date date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(lastDate);//trasforma lastdate nel formato corretto
                                     List<Email> listMail = FileQuery.readMailJSON(myUser);//leggo il file json e prendo le mail dell'user
                                     Date date2 = null;
@@ -149,12 +165,11 @@ public class ServerController implements Initializable {
                                        }
                                     }
                                 }
-
-                                outStream.writeObject(newMails);//TODO metto in stream NewMails, ovvero tutte le mail che vengono dopo data1, ovvero tutte le nuove email
+                                outStream.writeObject(newMails);//Scrivo nell'outputStream le NewMails -> che possono essere o solo le nuove email o la lista precedente (nel caso in cui non siano arrivate nuove email)
                                 break;
 
-                            case 3:  //Invia una mail -> data una mail da mandare, leggi tutte le altre nel json e aggiungi la mail da mandare al file json
-                                Email newMail = (Email) p.getObj2(); //prendi l'obj2 che contine la mail da mandare
+                            case 3:  /** Caso che invia una mail -> Aggiungo al file json la mail da mandare (contenuta nell'obj2) */
+                                Email newMail = (Email) p.getObj2();
                                 List<String> dests = newMail.getDestinatari(); //estraggo i destinatari
 
                                 boolean allSent = true;
@@ -166,20 +181,20 @@ public class ServerController implements Initializable {
                                 Object resUser =  null;
 
                                 for (String s : dests) {//per ogni destinatario
-                                    resUser = FileQuery.getUserByMail(s);//TODO restituisce l'user o false se non lo trova
+                                    resUser = FileQuery.getUserByMail(s);//Prendo l'user data la mail -> restituisce false se non lo trova
                                     if(resUser instanceof User){//se trova l'user
-                                        sentUser.add((User) resUser);//aggiungo lo user
-                                        sentDests.add(s);//aggiungo il destinatario
+                                        sentUser.add((User) resUser);
+                                        sentDests.add(s);
                                     }
                                     else if(resUser instanceof Boolean){ //user non trovato
                                         allSent = false;//variabile booleana che setto a false se non trovo un user così poi da scriverlo su teminale
                                         notSentDests.add(s);//aggiungo il destinatario alla lista dei destinatari "non trovati"
                                     }
                                 }
-                                newMail.setDestinatario(sentDests);//setta il destinatario alla nuova mail
+                                newMail.setDestinatario(sentDests);//setta i destinatari della nuova mail -> togliendo quelli che non ho trovato
 
                                 for (User u : sentUser){//per ogni user trovato nell'elenco dei destinatari
-                                        emails = FileQuery.readMailJSON(u);//TODO legge l'elenco delle mail di user u dal file json
+                                        emails = FileQuery.readMailJSON(u);//Leggo l'elenco delle mail di user u dal file json
                                         int lastID = 0;
                                         if(emails.size() > 0)//se l'elenco delle mail di user non è vuoto allora prendo l'ultimo id e lo incremento
                                             lastID = emails.get(emails.size()-1).getId() + 1;
@@ -194,19 +209,20 @@ public class ServerController implements Initializable {
                                 for (String s: sentDests) {
                                     printOnLog(s + " Ha ricevuto una nuova email");//scrivo i destinatari (che ho trovato) sul terminale
                                 }
-                                //TODO se scrivo sdf@gmail.com,matteo@gmail.com -> mi da matteo@gmail.com NON  TROVATO
-                                if(!allSent)printOnLog(newMail.destinatariToString() + " NON trovato");//se non ho trovato tutti i destinatari allora lo scrivo su terminale
+
+                                if(!allSent)printOnLog(notSentDests + " Destinatari NON trovati");//se non ho trovato tutti i destinatari allora lo scrivo su terminale
                                 outStream.flush();
 
                                 outStream.writeObject(result);//mando il risultato in outputSream sul socket
                                 break;
 
-                            case 4: //Elimina mail -> data un mail id, leggo tutte le email e trovo quella da cancellare, la rimuovo e riscrivo il file json
+                            case 4: /** Caso che elimina mail -> data un mail id, leggo tutte le email e trovo quella da cancellare, la rimuovo e riscrivo il file json*/
                                 int mailId = (int) p.getObj2();//prendo il mailid da getObj2
                                 Boolean res = false;
                                 res = FileQuery.deleteMail(myUser, mailId);
-                                //TODO chiedere se va bene stampare incoming.getInetAddress(), o è meglio stampare la mail dell'user
-                                printOnLog("Mail ID: "+ mailId + " eliminata da: " + incoming.getInetAddress() + " UserEmail: " + myUser.getEmail());//stampo sul terminale del server
+
+                                //printOnLog("Mail ID: "+ mailId + " eliminata da: " + incoming.getInetAddress() + " UserEmail: " + myUser.getEmail());//stampo sul terminale del server
+                                printOnLog("Mail ID: "+ mailId + " eliminata da: " + myUser.getEmail());//stampo sul terminale del server
                                 outStream.flush();
                                 outStream.writeObject(res);//mando il risultato in outputSream sul socket
                                 break;

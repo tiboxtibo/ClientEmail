@@ -2,9 +2,13 @@ package app;
 
 import java.io.Serializable;
 
+/**
+ * Classe per legare due oggetti tra di loro -> viene usata per diversi elementi
+ *  es: (istruzione-mail) (istruzione-(mail-password)) ...
+ * */
 public class Pair implements Serializable {
-    //TODO da completare bene la descrizione per cosa viene usato
-    private Object obj1;//viene usato come id dell'istruzione che dobbiamo compiere con la mail nell'obj2
+
+    private Object obj1;
     private Object obj2;
 
     public Pair(Object obj1, Object obj2) {

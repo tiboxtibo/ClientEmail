@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//TODO penso sia il model anche questo
 /** Model per le operazioni compiute dai clienti*/
 public class ClientMethods {
 
@@ -166,7 +165,7 @@ public class ClientMethods {
             outputStream = new ObjectOutputStream(socket.getOutputStream());//prende l'outputStream del server -> dove andiamo a scrivere
             Pair p = new Pair(1, mail + "," + pwd);//creo una coppia con obj1 l'id dell'operazione (1->login)
             outputStream.writeObject(p);//scrivo in outputstream
-            outputStream.flush();//non fa nulla -> //TODO da commentare perchè in teoria non fa nulla
+            outputStream.flush();//non fa nulla
             inputStream = new ObjectInputStream(socket.getInputStream());//prendo l'input stream
             obj = inputStream.readObject();//leggo l'input stream
             if (obj instanceof User) { //se obj è un User
