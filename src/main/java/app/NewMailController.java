@@ -57,7 +57,7 @@ public class NewMailController implements Initializable {
 
         if(validDests){
             if(ogg==null || ogg.trim().isEmpty()){
-                ClientMethods.startAlert("Subject must not be empty");
+                ClientMethods.startAlert("Il Destinatario NON può essere vuoto");
             }
             else{
                 Email email = new Email(ClientMethods.myUser.getEmail(), destList, ogg, text, date);

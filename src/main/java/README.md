@@ -10,7 +10,7 @@ L'applicazione si avvia inizialmente nella **ServerGUI**, dove avviene lo Start 
 Viene avviato così il **ServerController** che permette la creazione di un ServerSocket
 (la prima volta nel metodo initialize -> che chiama il socketThreadStart)
 
-    Esso mediante l'utilizzo di un loop infinito di prepara ad accettare le connessioni di più client con s.accept()
+    Esso mediante l'utilizzo di un loop infinito si prepara ad accettare le connessioni di più client con s.accept()
     (punto in cui si blocca fino quando un client non prova ad eseguire una connessione)
 
 Ogni volta che si connette un client la connessione viene accettata e il programma prosegue andando a creare un Thread
@@ -53,6 +53,26 @@ In caso di login positivo allora viene fatto lo switch di vista al mailView e vi
 (quindi il socket viene aperto e chiuso per ogni operazione effettuata dal client)
 
 Il mailListController:
+    handleMouseClick -> visualizzo tutti i dettagli dell'email selezionata e visualizzo i bottoni per azioni aggiuntive
+    In base al pulsante che premo genero un evento diverso:
+        
+        - CreateNewMail -> secondStage
+        - AnswerMail -> secondStage + destinatario
+        - answerAll -> secondStage + destinatari
+        - forwardMail -> secondStage + oggetto + testo
+        - deleteMail -> mailList.remove
+        - refreschAllMails -> checkNewMails
+
+SecondStage:
+    
+    Creo la nuova scena newmail.fxml con i parametri passati (se ci sono)
+
+Initialize:
+
+    setto tutti i bottoni e i dettagli delle mail invisibili
+    fillMailList -> inserisco i parametri dentro la maillist
+    creo un thread con un timer che chiama checkNewMail() ogni 10 sec
+
       
 
 
