@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-
+/** Controller per NewMail.fxml*/
 public class NewMailController implements Initializable {
 
     @FXML
@@ -29,22 +29,17 @@ public class NewMailController implements Initializable {
     public static String oggetto = "";
     public static String testo = "";
 
-    /**
-     * Button handler for the send mail.
-     * Checks validity of each recipient and only sends the mail to valid ones.
-     *
-     * @param actionEvent the action event
-     */
-    public void sendMail(ActionEvent actionEvent) {
-        //FXML variables initialization
-        String dests = destField.getText();
 
+    /** Button Handler per mandare una mail -> controlla i destinatari e poi invia la mail solo a quelli validi */
+    public void sendMail(ActionEvent actionEvent) {
+        //prendono il valore da ciò che scrivo (o che c'è già scritto) nei textfield
+        String dests = destField.getText();
         String ogg = oggettoField.getText();
         String text = textField.getText();
 
-        //local variables initialization
+
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();//data e ora nel momento in cui viene inviata una mail
         String date = dtf.format(now);
         String[] splitDest = dests.split(",");
         List<String> destList = new ArrayList<>();
@@ -52,7 +47,7 @@ public class NewMailController implements Initializable {
 
         for (String s: splitDest) {
             if(destsCheck()) destList.add(s);
-            else validDests = false;
+            else validDests = false;//se trovo un destinatario non valido
         }
 
         if(validDests){
@@ -71,21 +66,15 @@ public class NewMailController implements Initializable {
             }
         }
         else{
-            ClientMethods.startAlert("You have entered invalid recipients!");
+            ClientMethods.startAlert("Hai inserito un destinatario NON valido");
         }
     }
 
-    /**
-     * The pattern of characters for the mail check.
-     */
+    /** Pattern per la mail */
     public static Pattern validateEmail = Pattern.compile("[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$", Pattern.CASE_INSENSITIVE);
 
-    /**
-     * Check if recipients are written correctly.
-     * Returns true if all recipients are valid, false otherwise.
-     *
-     * @return the boolean
-     */
+
+    /** Controlla che i destinatari siano validi secondo il pattern */
     public boolean destsCheck() {
         String email = destField.getText();
         String[] splitMails = email.split(",");
@@ -98,6 +87,8 @@ public class NewMailController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**Setto inizialmente il valore dei destinatari,dell'oggetto o del testo
+         * se sono stati precedentemente settati, altrimenti saranno vuoti */
         destField.setText(destinatari);
         oggettoField.setText(oggetto);
         textField.setText(testo);

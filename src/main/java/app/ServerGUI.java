@@ -13,7 +13,7 @@ public class ServerGUI extends Application {
 
     private static Scene scene;
 
-    //Inizializzazione dell'UI
+    //Inizializzazione dell'UI (User Interface)
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ServerGUI.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();

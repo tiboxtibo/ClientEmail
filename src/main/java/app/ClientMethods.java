@@ -43,6 +43,7 @@ public class ClientMethods {
 
         Socket sendSocket = new Socket(host, port); //Nuova connessione nella porta 5566
         try {
+            //TODO approfondire
             MailListController.mutex = true;//variabile di Mutua esclusione per bloccare il programma dal ricaricare la lista delle email mentre stiamo facendo altre operazioni sul server
             outputStream = new ObjectOutputStream(sendSocket.getOutputStream()); //è ciò che mandiamo al server
             //outputStream.flush();
@@ -84,15 +85,15 @@ public class ClientMethods {
     /** Chiedo al server di eliminare una mail dal suo id -> restituisce true o false in base all'esito dell'operaizone */
     public static void deleteMail(int mailId) throws IOException, EOFException {
 
-        Socket sendSocket = new Socket(host, port);//Nuova connessione alla porta 5566
+        Socket deleteSocket = new Socket(host, port);//Nuova connessione alla porta 5566
         try {
-            MailListController.mutex = true;//setto la muta esclusione a true
+            MailListController.mutex = true;//setto la muta esclusione a true//TODO da approfondire il funzionamento
             emailList = FileQuery.readMailJSON(myUser);//leggo le mail dal file.txt in formato json di myuser
-            outputStream = new ObjectOutputStream(sendSocket.getOutputStream());//ciò che mando al server
+            outputStream = new ObjectOutputStream(deleteSocket.getOutputStream());//ciò che mando al server
             //outputStream.flush();
             Pair p = new Pair(4, mailId); //Coppia che mando al server -> obj1 contiene l'id dell operazione: 4 è l'id per il metodo delete
             outputStream.writeObject(p);//scrivo la coppian nell'OutputStream
-            inputStream = new ObjectInputStream(sendSocket.getInputStream());//prendo l'input stream
+            inputStream = new ObjectInputStream(deleteSocket.getInputStream());//prendo l'input stream
             try {
                 obj = inputStream.readObject();//leggo l'input stream
                 if (obj instanceof Boolean) {//se obj1 è un booleano
@@ -117,7 +118,7 @@ public class ClientMethods {
             outputStream.close();
 
         }
-        sendSocket.close();//chiudo il socket
+        deleteSocket.close();//chiudo il socket
     }
 
 

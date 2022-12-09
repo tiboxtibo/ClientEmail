@@ -79,7 +79,7 @@ public class MailListController implements Initializable {
     /** Crea una nuova scena per rispondere alla mail selezionata */
     @FXML
     public void answerMail(ActionEvent event) throws IOException {
-        NewMailController.destinatari = currentMail.getMittente(); //setto la variabile di destinatari già con il destinatario corrente
+        NewMailController.destinatari = currentMail.getMittente(); //setto la variabile all'interno di NewMailController di destinatari già con il destinatario corrente
         secondStage();
     }
 
@@ -90,6 +90,7 @@ public class MailListController implements Initializable {
         //metto in un array le mail dei destinatari che sono separate da una virgola
         String[] split = currentMail.destinatariToString().split(",");
         String tot = "";
+        //TODO capire bene come vengono gestiti i destinatari durante answerAll
 
         for(int i = 0; i< split.length;i++){
             String currSplit = split[i].replace("\"", "");//serve per eliminare le virgolette "
@@ -180,6 +181,7 @@ public class MailListController implements Initializable {
      * Chiede al server di controllare se ci sono nuove email
      * Manda un allert con il numero di nuove mail ricevute dall'ultimo controllo
      * */
+    //TODO controllare qui per capire bene lastDate
     public void checkNewMails() {
         try {
             int tmpSize = 0;

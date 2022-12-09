@@ -1,3 +1,5 @@
+**SPIEGAZIONE PROGETTO**
+
 Il progetto consiste:
 
     nello sviluppo di un servizio di posta elettronica organizzato con:
@@ -73,14 +75,15 @@ Initialize:
     fillMailList -> inserisco i parametri dentro la maillist
     creo un thread con un timer che chiama checkNewMail() ogni 10 sec
 
-      
 
 
+**Possibili DOMANDE Esame:**
 
+1) Come avviene la creazione del server?
+        
 
-DOMANDE Esame:
-    1) Come avviene la connessione al server?
-    2) Come avviene la connessione del client al server?
-    2) Come avviene la sincronizzazione tra thread?
-    3) Come gestisci il pulsante rispondi a tutti? E come gestisci i destinatari multipli?
-    4) Come fa accorgersi che è arrivato una mail?
+    
+2) Come avviene la connessione del client al server?
+3) Come avviene la sincronizzazione tra thread?
+4) Come gestisci il pulsante rispondi a tutti? E come gestisci i destinatari multipli?
+5) Come fa accorgersi che è arrivato una mail?

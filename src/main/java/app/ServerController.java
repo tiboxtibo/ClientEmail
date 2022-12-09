@@ -33,7 +33,7 @@ public class ServerController implements Initializable {
     private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(); //lock per eseguire le operazioni lettura/scrittura in muta esclusione
 
     /**
-     * Creazione di un nuovo socket mediante l'uso dei thread
+     * Creazione di un nuovo Server socket  e utilizzo i thread
      * per permettere a più client di connettersi contemporaneamente
      * */
     public void socketThreadStart() {
@@ -46,11 +46,11 @@ public class ServerController implements Initializable {
                 int finalI = i;//contatore che viene poi passato al threadHandler
                 Socket incoming = s.accept();//questo while non va in loop infinito poichè si ferma subito in s.accept(), che aspetta che un client faccia richiesta al server
 
+                //TODO provare ad usare i threadpools per gestire le troppe connessioni
                 new Thread() {
                     @Override
                     public void run() {
 
-                        //TODO Chiedere se la gestione della sincronizzazione tra i thread va bene se fatta con il metodo Platform.runLater(() -> {}) e con il ReentrantReadWriteLock per leggere e scrivere su file?
                         /**
                          * Quando un thread aggiorna la UI (User Interface) tale update deve essere eseguito nel main thread
                          * (che esegue il metodo principale del programma e aggiorna gli elementi dell'interfaccia utente)
@@ -102,15 +102,16 @@ public class ServerController implements Initializable {
      * to the user interface in response to messages sent by other threads running within the application's process. */
 
     /**
-     * ThreadHandler serve per catturare le richieste del Client
-     * Usiamo il ReentrantReadWriteLock per la mutua esclusione per la lettura/scrittura
-     * Possiamo fare quindi più operazioni contemporaneamente allo stesso file
-     * Le operazioni sono così gestite:
-     *  1)Login
-     *  2)Richiesta di mail
-     *  3)Richiesta di invio di una mail
-     *  4)Richiesta di eliminare una mail
-     * */
+     ThreadHandler serve per leggere in modo ciclico l'inputStream ed eseguire delle azioni
+     in base a cosa hanno inviato i Client nel Server
+     Usiamo il ReentrantReadWriteLock per accedere ai file in mutua esclusione per la lettura/scrittura
+
+     Le operazioni sono così gestite:
+         1)Login
+         2)Richiesta di mail
+         3)Richiesta di invio di una mail
+         4)Richiesta di eliminare una mail
+     */
     public void ThreadHandler(Socket incoming, int index) throws IOException, ClassNotFoundException {
         //incoming->incoming Socket, index->numero del socket
 
