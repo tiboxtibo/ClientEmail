@@ -146,6 +146,18 @@ public class MailListController implements Initializable {
      * */
     public void refreshAllMails(ActionEvent event) {
         checkNewMails();
+        answerMail.setVisible(false);
+        answerAll.setVisible(false);
+        deleteBtn.setVisible(false);
+        forwardMail.setVisible(false);
+        mittenteLabel.setVisible(false);
+        destLabel.setVisible(false);
+        oggettoLabel.setVisible(false);
+        dataLabel.setVisible(false);
+        textLabel.setVisible(false);
+        daLabel.setVisible(false);
+        aLabel.setVisible(false);
+        objLabel.setVisible(false);
     }
 
 
