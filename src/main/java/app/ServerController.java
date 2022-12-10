@@ -32,6 +32,11 @@ public class ServerController implements Initializable {
     //TODO capire bene il ReentrantReadWriteLock
     private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(); //lock per eseguire le operazioni lettura/scrittura in muta esclusione
 
+    /** Metodo di inizializzazione -> avvia un nuovo thread  */
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        new Thread(() -> socketThreadStart()).start();
+    }
+
     /**
      * Creazione di un nuovo Server socket  e utilizzo i thread
      * per permettere a più client di connettersi contemporaneamente
@@ -43,8 +48,9 @@ public class ServerController implements Initializable {
             System.out.println("Creazione di un socket all'indirizzo: " + s.getLocalSocketAddress());
             int i = 1;
             while (true) {//creo un loop infinito per gestire i client che fanno richiesta di connessione al socket
-                int finalI = i;//contatore che viene poi passato al threadHandler
-                Socket incoming = s.accept();//questo while non va in loop infinito poichè si ferma subito in s.accept(), che aspetta che un client faccia richiesta al server
+
+                int finalI = i;//contatore dei thread
+                Socket incoming = s.accept();//questo while non va in loop infinito poichè si ferma subito in s.accept(), e aspetta che un client faccia richiesta al server
 
                 //TODO provare ad usare i threadpools per gestire le troppe connessioni
                 new Thread() {
@@ -54,28 +60,21 @@ public class ServerController implements Initializable {
                         /**
                          * Quando un thread aggiorna la UI (User Interface) tale update deve essere eseguito nel main thread
                          * (che esegue il metodo principale del programma e aggiorna gli elementi dell'interfaccia utente)
-                         * Il metodo  Platform.runLater(() -> {}) lo uso se voglio che qualcosa venga eseguito nel thread principale
-                         * Se non usassi tale metodo e avessi due thread che cercano di modificare l'interfaccia contemporaneamente avrei un errore a Runtime
-                         * quindi mettendo il metodo all'interno di Platform.runLater creerò una coda e assicurerò che i due tread non modifichino l'interfaccia
-                         * contemporaneamente
-                         * RunLater è come se fosse un sistema di coda, quindi metterà il thread in coda e lo eseguirà non appena potrà
-                         * Platform.runLater(() -> {}) viene usato nelle applicazioni di JavaFX poichè l'applicazione è il main Thread
-                         * runLater dice che verrà eseguito ad un tempo indefinito nel futuro, di solito esso viene eseguito immediatamente
-                         * a meno che il main thread non sia occupato, in questo caso il thread aspetterà il suo turno
-                         *  Fonte: https://www.youtube.com/watch?v=IOb9jJkKCZk
+                         * per questo motivo ho usato il metodo Platform.runLater(() -> {}) per poter modificare la scena da ogni thread
                          *
+                         * RunLater viene usato come se fosse un sistema di coda, quindi metterà il thread in coda e lo eseguirà non appena
+                         * il main thread potrà
+                         * Questa tecnica è particolarmente usata nelle applicazioni di JavaFX poichè l'applicazione è il main Thread
+                         *
+                         * Esso significa che verrà eseguito ad un tempo indefinito nel futuro, di solito esso viene eseguito immediatamente
+                         * a meno che il main thread non sia occupato, in questo caso il thread aspetterà il suo turno
+                         *
+                         *  Fonte: https://www.youtube.com/watch?v=IOb9jJkKCZk
                          * */
-                        /**
-                         * runLater. Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future.
-                         *  This method, which may be called from any thread,
-                         *  will post the Runnable to an event queue and then return immediately to the caller.
-                         *  The Runnables are executed in the order they are posted.
-                         *  fonte: https://docs.oracle.com/javase/8/javafx/api/javafx/application/Platform.html
-                         *  */
                         Platform.runLater(() -> {
                             try {
-                                clients.add(new PairSocketUser(incoming, null));//aggiungo un clients, il cui username è al momento nullo ma mi serve a salvare la coppia socket-user
-                                ThreadHandler(incoming, finalI);//chiamo il ThreadHandler a cui passo il socket e il contatore (che conta il numero di thrad avviati) -> dice al socket ciò che deve fare
+                                clients.add(new PairSocketUser(incoming, null));//aggiungo un clients (socket-user) -> user è nullo poichè devo ancora fare il login
+                                ThreadHandler(incoming, finalI);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (ClassNotFoundException e) {
@@ -92,14 +91,6 @@ public class ServerController implements Initializable {
         }
     }
 
-    /** Metodo di inizializzazione -> avvia un nuovo thread  */
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        new Thread(() -> socketThreadStart()).start();
-    }
-
-
-    /**Def: Thread handlers are implemented in the main thread of an application and are primarily used to make updates
-     * to the user interface in response to messages sent by other threads running within the application's process. */
 
     /**
      ThreadHandler serve per leggere in modo ciclico l'inputStream ed eseguire delle azioni
@@ -124,25 +115,22 @@ public class ServerController implements Initializable {
                 while (true) {
                     Object obj = inStream.readObject();//leggo l'input stream del socket
 
-                    if (obj instanceof Pair) {//se l'oggetto è una coppia -> in obj1 c'è sempre l'istruzione da eseguire, in obj2 dipende in base dall'operazione da effettuare
+                    if (obj instanceof Pair) {//se l'oggetto è una coppia -> in obj1 c'è l'istruzione da eseguire, in obj2 dipende in base dall'operazione da effettuare
                         Pair p = (Pair) obj;
                         switch ((Integer) p.getObj1()) {//faccio lo switch di obj1, ovvero dell'operazione da effettuare
 
                             case 1:       /** Caso Login --> Verifica la mail e la password e restituisce l'UserId se esiste, altrimenti 0*/
-                                String[] split = ((String) p.getObj2()).split(",");//obj2 contiene la mail e la password separate da ,
-
-                                //split[0]->mail split[1]->password
+                                String[] split = ((String) p.getObj2()).split(",");//split[0]->mail split[1]->password
                                 int id = FileQuery.getUserId(split[0], split[1]);//restituisce l'id dell'utente se lo trova, altrimenti restituisce 0
 
                                 User user = null;
                                 if (id != 0) {//se ho trovato una mail e una password che corrispondono
                                     user = new User(id, split[0], split[1]);//creo un nuovo utente
-                                    myUser = user;//lo salvo nella variabile globale
+                                    myUser = user;
 
-                                    //salvo dentro la lista clients (che lega un socket e un user)
+                                    //setto la coppia username-socket (prima username era null)
                                     ServerController.clients.set(index - 1, new PairSocketUser(ServerController.clients.get(index - 1).socket, user));
 
-                                    //printOnLog("Login by " + incoming.getInetAddress() + " UserEmail: " + myUser.getEmail());//stampo sul terminale del server l'indirizzo a cui è connesso il socket
                                     printOnLog("Login by " + myUser.getEmail());//stampo sul terminale del server l'indirizzo mail che ha effettuato l'accesso
                                     outStream.writeObject(user);//Scrivo nell'output del socket
                                 } else {
@@ -152,7 +140,7 @@ public class ServerController implements Initializable {
                                 break;
 
                             case 2: /** Caso Richiesta di mail -> restituisce la lista di mail dell'user presa dal file json*/
-                                Pair pReq = (Pair) p.getObj2();//prendo obj2 -> in questo caso è composto dalla coppia myUser-lastDate
+                                Pair pReq = (Pair) p.getObj2();//prendo obj2 -> User-lastDate
                                 myUser = (User) pReq.getObj1();
                                 String lastDate = (String) pReq.getObj2();
                                 List<Email> newMails = new ArrayList<Email>();
@@ -163,8 +151,8 @@ public class ServerController implements Initializable {
                                     Date date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(lastDate);//trasforma lastdate nel formato corretto
                                     List<Email> listMail = FileQuery.readMailJSON(myUser);//leggo il file json e prendo le mail dell'user
                                     Date date2 = null;
-                                    for (Email e: listMail) {//per ogni email nella lista
-                                       date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(e.getData());//prendo la data di ogni email di user
+                                    for (Email e: listMail) {//per ogni email di user
+                                       date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(e.getData());//prendo la data
                                        if(date2.after(date1)){//se la data2 è dopo la data1
                                            newMails.add(e);//aggiungo la mail e all'elenco delle nuove mail
                                        }
@@ -210,9 +198,9 @@ public class ServerController implements Initializable {
                                 }
 
                                 result = new Pair(allSent, notSentDests);
-                                printOnLog(newMail.getMittente() + " Ha inviato una nuova email");//messaggio da terminale sul server
+                                printOnLog(newMail.getMittente() + " Ha inviato una nuova email");//messaggio sul terminale del server
                                 for (String s: sentDests) {
-                                    printOnLog(s + " Ha ricevuto una nuova email");//scrivo i destinatari (che ho trovato) sul terminale
+                                    printOnLog(s + " Ha ricevuto una nuova email");
                                 }
 
                                 if(!allSent)printOnLog(notSentDests + " Destinatari NON trovati");//se non ho trovato tutti i destinatari allora lo scrivo su terminale

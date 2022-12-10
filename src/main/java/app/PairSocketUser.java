@@ -2,6 +2,9 @@ package app;
 
 import java.net.Socket;
 
+/**
+ * Creo una coppia socket-user
+ * */
 public class PairSocketUser {
     public Socket socket;
     public User user;
