@@ -83,7 +83,7 @@ public class ServerController implements Initializable {
                             }
                         });
                     }
-                }.start();
+                 }.start();
 
                 i++;
             }

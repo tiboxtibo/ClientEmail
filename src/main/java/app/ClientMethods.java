@@ -43,14 +43,16 @@ public class ClientMethods {
 
         Socket sendSocket = new Socket(host, port); //Nuova connessione nella porta 5566
         try {
-            //TODO approfondire
-            MailListController.mutex = true;//variabile di Mutua esclusione per bloccare il programma dal ricaricare la lista delle email mentre stiamo facendo altre operazioni sul server
+
+            //variabile booleana di Mutua esclusione per bloccare il programma dal ricaricare la lista delle email mentre stiamo facendo altre operazioni sul server
+            MailListController.mutex = true;
+
             outputStream = new ObjectOutputStream(sendSocket.getOutputStream()); //è ciò che mandiamo al server
             //outputStream.flush();
             /**Creo una coppia che lega la mail ad un id, in questo caso l'id è legato all'operazione che dobbiamo compiere con questa email */
             Pair p = new Pair(3, mail); //3 è l'id per l'invio di una mail
             outputStream.writeObject(p); // manda la coppia email-id al server
-            inputStream = new ObjectInputStream(sendSocket.getInputStream());  //prendo l'input stream del socket
+            inputStream = new ObjectInputStream(sendSocket.getInputStream());
             try {
                 obj = inputStream.readObject();
                 if (obj instanceof Pair) { //se l'oggetto contenuto nell'inputstream è una coppia

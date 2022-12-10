@@ -37,6 +37,8 @@ public class MailListController implements Initializable {
     private int hashIndex = 0;
     private int startNumMails = 0;
 
+    /** Variabile booleana per gestire le sezioni critiche dei metodi di ClientsMethods
+     *  -> per non creare conflitti con il thread che controlla le nuove email ogni 10 sec */
     public static Boolean mutex = false;
 
     /** Handle mouse Click fa visualizzare i dettagli dell'email selezionata e fa visualizzare i bottoni per azioni aggiuntive */
@@ -277,17 +279,18 @@ public class MailListController implements Initializable {
             new Thread(() -> {
 
                 Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() { // Creo una task di background
-                    @Override
-                    public void run() {
-                        //TODO non so come funzioni bene -> da controllare
-                        Platform.runLater(() -> {
-                            if(mutex == false) {
-                                checkNewMails();
-                                System.out.println("Email controllate!");
-                            }
-                        });
-                    }
+                timer.scheduleAtFixedRate(
+                    new TimerTask() { // Creo una task di background
+                        @Override
+                        public void run() {
+                            Platform.runLater(() -> {
+                                //se mutex==true allora sono in una sezione critica (sendEmail,deleteEmail,..), quindi non controllo le nuove email
+                                if(mutex == false) {
+                                    checkNewMails();
+                                    System.out.println("Email controllate!");
+                                }
+                            });
+                        }
                 }, 0, 10000);
 
             }).start();
