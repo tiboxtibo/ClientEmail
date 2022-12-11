@@ -1,5 +1,5 @@
 **Mappa Concettuale**
-![img.png](img.png)
+![img.png](src/main/java/img.png)
 **SPIEGAZIONE PROGETTO**
 
 Il progetto consiste:
