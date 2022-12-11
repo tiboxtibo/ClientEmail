@@ -30,6 +30,18 @@ public class NewMailController implements Initializable {
     public static String testo = "";
 
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**Setto inizialmente il valore dei destinatari,dell'oggetto o del testo
+         * se sono stati precedentemente settati, altrimenti saranno vuoti */
+        destField.setText(destinatari);
+        oggettoField.setText(oggetto);
+        textField.setText(testo);
+        destinatari = "";
+        oggetto = "";
+        testo = "";
+    }
+
     /** Button Handler per mandare una mail -> controlla i destinatari e poi invia la mail solo a quelli validi */
     public void sendMail(ActionEvent actionEvent) {
         //prendono il valore da ciò che scrivo (o che c'è già scritto) nei textfield
@@ -85,17 +97,7 @@ public class NewMailController implements Initializable {
         return retVal;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        /**Setto inizialmente il valore dei destinatari,dell'oggetto o del testo
-         * se sono stati precedentemente settati, altrimenti saranno vuoti */
-        destField.setText(destinatari);
-        oggettoField.setText(oggetto);
-        textField.setText(testo);
-        destinatari = "";
-        oggetto = "";
-        testo = "";
-    }
+
 }
 
 

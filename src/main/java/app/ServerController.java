@@ -29,7 +29,7 @@ public class ServerController implements Initializable {
     @FXML
     public ListView listLog; //è legato ad un valore nell'file fxml, in questo caso serve per visualizzare gli output del server
 
-    //TODO capire bene il ReentrantReadWriteLock
+    //TODO capire bene il ReentrantReadWriteLock -> qui in teoria non serve a nulla
     private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(); //lock per eseguire le operazioni lettura/scrittura in muta esclusione
 
     /** Metodo di inizializzazione -> avvia un nuovo thread  */

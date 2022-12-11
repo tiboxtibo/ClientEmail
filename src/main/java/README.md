@@ -1,3 +1,5 @@
+**Mappa Concettuale**
+![img.png](img.png)
 **SPIEGAZIONE PROGETTO**
 
 Il progetto consiste:
@@ -77,13 +79,3 @@ Initialize:
 
 
 
-**Possibili DOMANDE Esame:**
-
-1) Come avviene la creazione del server?
-        
-
-    
-2) Come avviene la connessione del client al server?
-3) Come avviene la sincronizzazione tra thread?
-4) Come gestisci il pulsante rispondi a tutti? E come gestisci i destinatari multipli?
-5) Come fa accorgersi che è arrivato una mail?

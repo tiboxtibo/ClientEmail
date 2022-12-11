@@ -55,7 +55,6 @@ public class FileQuery {
             jsonWriter.writeArray(mailJsonObj);//per scrivere infine l'array json all'interno del file
             jsonWriter.close();
         } finally {
-            //TODO capire bene il lock
             readWriteLock.writeLock().unlock();//libero il lock
         }
 

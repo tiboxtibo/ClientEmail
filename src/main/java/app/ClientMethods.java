@@ -32,10 +32,9 @@ public class ClientMethods {
 
 
     /**
-     * Metodo per mandare mail agli altri utenti
-     * manda una mail al server e controlla se almeno un user esiste
-     * il server manda la mail solo se c'è almeno un destinatario valido, nel caso segna errore
-     * restituisce true se la mail viene mandata
+     * Metodo per mandare  una mail
+     * apro una connessione e scrivo nell'outputStream
+     * in base a cosa ricevo dall'inputStream mando un alert o di successo o di errore
      * */
     public static Boolean sendMail(Email mail) throws IOException, EOFException {
 
@@ -89,12 +88,12 @@ public class ClientMethods {
 
         Socket deleteSocket = new Socket(host, port);//Nuova connessione alla porta 5566
         try {
-            MailListController.mutex = true;//setto la muta esclusione a true//TODO da approfondire il funzionamento
+            MailListController.mutex = true;//variabile per la gestione della sezione critica
             emailList = FileQuery.readMailJSON(myUser);//leggo le mail dal file.txt in formato json di myuser
             outputStream = new ObjectOutputStream(deleteSocket.getOutputStream());//ciò che mando al server
             //outputStream.flush();
             Pair p = new Pair(4, mailId); //Coppia che mando al server -> obj1 contiene l'id dell operazione: 4 è l'id per il metodo delete
-            outputStream.writeObject(p);//scrivo la coppian nell'OutputStream
+            outputStream.writeObject(p);//scrivo la coppia nell'OutputStream
             inputStream = new ObjectInputStream(deleteSocket.getInputStream());//prendo l'input stream
             try {
                 obj = inputStream.readObject();//leggo l'input stream
