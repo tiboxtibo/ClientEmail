@@ -1,5 +1,4 @@
-**Mappa Concettuale**
-![img.png](src/main/java/img.png)
+
 **SPIEGAZIONE PROGETTO**
 
 Il progetto consiste:
@@ -76,6 +75,9 @@ Initialize:
     setto tutti i bottoni e i dettagli delle mail invisibili
     fillMailList -> inserisco i parametri dentro la maillist
     creo un thread con un timer che chiama checkNewMail() ogni 10 sec
+
+**Mappa Concettuale**
+![img.png](src/main/java/img.png)
 
 
 
