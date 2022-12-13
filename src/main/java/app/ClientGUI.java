@@ -15,12 +15,12 @@ public class ClientGUI extends Application {
 
     private static Scene scene;
 
-    // Set initial scene, which is the login GUI
+    // Serve per settare una nuova scena e caricare quindi il nuovo file fxml
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 
-    // Initialization for UI 
+    // carica la scena fxml
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ClientGUI.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();

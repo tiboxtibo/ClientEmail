@@ -4,8 +4,9 @@
 
     Io inizialmente avvio il file ServerGUI.java che farà il launch() (ovvero esegue il metodo start), il quale crea la
     la scena del server che è collegata al ServerController
-    Il ServerController eseguirà inizialmente il metodo di Inizialize che chiama socketThreadStart()
-        tale metodo crea un socket su una porta scelta a caso che non vada ad interferire con altri processi
+    Il ServerController eseguirà inizialmente il metodo di Inizialize che crea una thread dove al suo interno chiama
+    socketThreadStart()
+        tale metodo crea un ServerSocket su una porta scelta a caso che non vada ad interferire con altri processi
         Poi andrà in un loop infinito con while(true) che servirà a gestire i client che fanno richiesta di connessione
         -> tale metodo si bloccherà ad s.accept() poichè aspetterà che un client faccia richiesta al server
         Quando il client fa richiesta esso accetta tale richiesta e prosegue andando a creare un thread
@@ -83,7 +84,7 @@
     new mail nella quale ci sono già alcuni parametri settati (in questo caso no poichè andiamo a creare una mail da zero)
     Nel NewMailController abbiamo un metodo di inizializzazione dove setto i valori dei destinatari, dell'oggetto e del 
     testo se sono stati precedentemente settati (in questo caso no)
-    Quando cikko il pulsante di invia, dopo aver scritto la mail, controllo la validità dei destinatari, ovvero se la mail 
+    Quando clikko il pulsante di invia, dopo aver scritto la mail, controllo la validità dei destinatari, ovvero se la mail 
     è nel formato corretto; in questo caso prendo la data del momento e creo una mail con tutti i parametri e utilizzando 
     ClientsMethods.sendEmail() la invio; 
         tale metodo aprirà la connessione socket e scriverà la coppia (3,mail) nell'outputStream del socket
@@ -116,8 +117,26 @@
     mandata a tutti i destinatari, altrimenti notifico i destinatari (notSentDest) ai quali non è stata mandata
 
 
-8) Come funziona il pulsante inoltra?
-9) Come funziona il pulsante elimina?
+8- Come funziona il pulsante inoltra?
+
+    Quando dopo aver selezionato una mail premo il pulsante inoltra setto l'oggetto e il testo di NewMailController 
+    e chiamo il secondStage() che mi aprirà una nuova finestra per l'ivio di una nuova mail solo con il testo e 
+    l'oggetto già scritti -> manca solo il destinatario
+
+9- Come funziona il pulsante elimina?
+
+    Quando selezioniamo una mail e premiamo sul pulsante elimina chiamerò 
+    ClientMethods.deleteMail(id) al quale passo l'id della mail selezionata
+        apro la connessione al socket e imposto la variabile mutex del mailListController a true -> quindi non 
+        aggiornerà le mail in questa situazione (sezione critica)
+        Creo la coppia con (4-id) da scrivere sull'outputStream del socket con l'id della mail da eliminare
+        Il threadHandler del ServerSocket legge l'input stream,e va al caso 4-> elimina mail dove verrà chiamato il 
+        FileQuery.deleteMail(user,id) a cui viene passato l'id della mail da eliminare
+    DeleteMail leggerà il file json e se la trova rimuove la mail corrispondente all'id -> ritornando true
+    Il serverController scriverà poi nell'outputStream il risultato
+    tale risultato verrà letto dal  clientMethods.java che e manderà un risultato in base alla risposta ricevuta
+    infine verrà chiuso il socket
+
 10) Come funziona il pulsante refresh?
 11) Come funziona il pulsante rispondi e rispondi a tutti?
 12) Come sono gestiti le notifiche della ricezione di nuove email?

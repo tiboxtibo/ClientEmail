@@ -32,7 +32,10 @@ public class FileQuery {
 
                 //aggiungo tutti i destinatari ad un arrayJson
                 for (int i = 0; i < e.destinatari.size(); i++) {
-                    destsBuilder.add(e.destinatari.get(i).substring(0,e.destinatari.get(i).toString().length()));
+                    //destsBuilder.add(e.destinatari.get(i).substring(0,e.destinatari.get(i).toString().length()));
+                    //ho dovuto usare .replace altrimenti ogni volta che riscrivevo una array json mi salvava anche \"
+                    destsBuilder.add(e.destinatari.get(i).substring(0,e.destinatari.get(i).toString().length()).replace("\"", ""));
+
 
                 }
                 //inserisco tutti gli elementi della mail all'interno di un oggetto json

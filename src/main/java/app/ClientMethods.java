@@ -89,7 +89,8 @@ public class ClientMethods {
         Socket deleteSocket = new Socket(host, port);//Nuova connessione alla porta 5566
         try {
             MailListController.mutex = true;//variabile per la gestione della sezione critica
-            emailList = FileQuery.readMailJSON(myUser);//leggo le mail dal file.txt in formato json di myuser
+            //TODO da cancellare emailList
+            //emailList = FileQuery.readMailJSON(myUser);//leggo le mail dal file.txt in formato json di myuser
             outputStream = new ObjectOutputStream(deleteSocket.getOutputStream());//ciò che mando al server
             //outputStream.flush();
             Pair p = new Pair(4, mailId); //Coppia che mando al server -> obj1 contiene l'id dell operazione: 4 è l'id per il metodo delete
@@ -130,8 +131,8 @@ public class ClientMethods {
             if (socket.isClosed()) { //se il socket è stato chiuso lo riapriamo
                 socket = new Socket(host, port);
             }
-
-            emailList = FileQuery.readMailJSON(myUser);//leggo le mail di myuser contenute nel file txt in formato json
+            //TODO da cancellare emailList
+            //emailList = FileQuery.readMailJSON(myUser);//leggo le mail di myuser contenute nel file txt in formato json
             outputStream = new ObjectOutputStream(socket.getOutputStream());//ciò che mando al server
             //outputStream.flush();
             Pair lastMailUser = new Pair(myUser, lastDate);//creo la coppia myUser-lastDate

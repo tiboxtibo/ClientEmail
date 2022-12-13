@@ -93,7 +93,6 @@ public class ServerController implements Initializable {
     /**
      ThreadHandler serve per leggere in modo ciclico l'inputStream ed eseguire delle azioni
      in base a cosa hanno inviato i Client nel Server
-     Usiamo il ReentrantReadWriteLock per accedere ai file in mutua esclusione per la lettura/scrittura
 
      Le operazioni sono così gestite:
          1)Login
@@ -117,7 +116,7 @@ public class ServerController implements Initializable {
                         Pair p = (Pair) obj;
                         switch ((Integer) p.getObj1()) {//faccio lo switch di obj1, ovvero dell'operazione da effettuare
 
-                            case 1:       /** Caso Login --> Verifica la mail e la password e restituisce l'UserId se esiste, altrimenti 0*/
+                            case 1:       /** Caso Login --> Verifica la mail e la password e restituisce l'UserId se esiste, altrimenti 0 */
                                 String[] split = ((String) p.getObj2()).split(",");//split[0]->mail split[1]->password
                                 int id = FileQuery.getUserId(split[0], split[1]);//restituisce l'id dell'utente se lo trova, altrimenti restituisce 0
 
@@ -232,7 +231,7 @@ public class ServerController implements Initializable {
                 outStream.close();
                 inStream.close();
             }
-        } else System.out.println("Socket NON chiuso");
+        } else System.out.println("Il Socket è chiuso");
 
     }
 
