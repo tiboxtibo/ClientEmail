@@ -1,13 +1,13 @@
-**Autori**
+# Autori
 Matteo Tiboldo
 
-**Getting Started**
+# Getting Started
 Ricordarsi di attivare: "allow multiple istance"
 Avviare come prima cosa il ServerGUI e successivamente il ClientGUI (posso aprirne anche più di uno)
 
-**Presentazione progetto**
+# Presentazione progetto
 Il progetto consiste nello sviluppo di un servizio di posta elettronica contenente:
-    - Un mail Server che mediante l'utilizzo dei thread gestisce le caselle di posta elettronica degli utenti
+    > - Un mail Server che mediante l'utilizzo dei thread gestisce le caselle di posta elettronica degli utenti
     - I mail Client che collegandosi al server permettono agli utenti l'accesso alle proprie caselle 
       di posta elettronica
 
@@ -21,8 +21,8 @@ Dopo aver effettuato il Login l'utente avrà disponibili le proprie mail e potr�
 ad una altro utente.
 ![img_2.png](img_2.png)
 
-**Consegna**
-Si sviluppi un’applicazione Java che implementi un servizio di posta elettronica organizzato con un mail server che 
+# Consegna
+> Si sviluppi un’applicazione Java che implementi un servizio di posta elettronica organizzato con un mail server che 
 gestisce le caselle di posta elettronica degli utenti e i mail client necessari per permettere agli utenti di accedere 
 alle proprie caselle di posta.
     • Il mail server gestisce una lista di caselle di posta elettronica e ne mantiene la persistenza utilizzando file 
@@ -35,31 +35,31 @@ alle proprie caselle di posta.
     finestra o simili in quanto non sono di pertinenza del server.
 
 • Una casella di posta elettronica contiene:
-    ○ Nome dell’account di mail associato alla casella postale (es.giorgio@mia.mail.com).
+    > ○ Nome dell’account di mail associato alla casella postale (es.giorgio@mia.mail.com).
     ○ Lista (eventualmente vuota) di messaggi. I messaggi di posta elettronica sono istanze di una classe Email che 
     specifica ID, mittente, destinatario/i, argomento, testo e data di spedizione del messaggio.
+    
 • Il mail client, associato a un particolare account di posta elettronica, 
 ha un’interfaccia grafica così caratterizzata:
-
-○ L’interfaccia permette di:
+> ○ L’interfaccia permette di:
 - creare e inviare un messaggio a uno o più destinatari (destinatari multipli di un solo messaggio di posta elettronica)
 - leggere i messaggi della casella di posta
 - rispondere a un messaggio ricevuto, in Reply (al mittente del messaggio) e/o in Reply-all (al mittente e a tutti i destinatari del messaggio ricevuto)
 - girare (forward) un messaggio a uno o più account di posta elettronica
 - rimuovere un messaggio dalla casella di posta.
-- 
-○ L’interfaccia mostra sempre la lista aggiornata dei messaggi in casella e, quando arriva un nuovo messaggio, notifica 
+
+> ○ L’interfaccia mostra sempre la lista aggiornata dei messaggi in casella e, quando arriva un nuovo messaggio, notifica 
 l’utente attraverso una finestra di dialogo.
 ○ NB: per semplicità si associno i mail client agli utenti a priori: non si richiede che il mail client offra le 
 funzionalità di registrazione di un account di posta. Inoltre, un mail client è associato a una sola casella di 
 posta elettronica e la sua interfaccia non richiede autenticazione da parte dell’utente.
 
-• NB: il mail client non deve andare in crash se il mail server viene spento 
+> • NB: il mail client non deve andare in crash se il mail server viene spento 
 – gestire i problemi di connessione al mail server inviando opportuni messaggi di errore all’utente e fare in modo 
 che il mail client si riconnetta automaticamente al server quando questo è novamente attivo.
 
 **Requisiti tecnici**
-• Per la dimostrazione si assuma di avere 3 utenti di posta elettronica che comunicano tra loro. Si progetti però il 
+> • Per la dimostrazione si assuma di avere 3 utenti di posta elettronica che comunicano tra loro. Si progetti però il 
 sistema in modo da renderlo scalabile a molti utenti.
 • L’applicazione deve essere sviluppata in Java (JavaFXML) e basata su architettura MVC, con Controller + viste e Model,
 seguendo i principi del pattern Observer Observable. Si noti che non deve esserci comunicazione diretta tra viste e 
@@ -79,7 +79,7 @@ l’uso di Socket Java.
 
 **Requisiti dell’interfaccia utente**
 L’interfaccia utente deve essere:
-• Comprensibile (trasparenza). In particolare, a fronte di errori, deve segnalare il problema all’utente.
+> • Comprensibile (trasparenza). In particolare, a fronte di errori, deve segnalare il problema all’utente.
 • Ragionevolmente efficiente per permettere all’utente di eseguire le operazioni con un numero minimo di click e di 
 inserimenti di dati.
 • Deve essere implementata utilizzando JavaFXML e, se necessario, Thread java. Non è richiesto, ma consigliato, l’uso 
@@ -94,7 +94,7 @@ prova orale e della discussione di laboratorio (i due voti hanno ugual peso nell
 essere registrato entro fine settembre 2022, data oltre la quale non è possibile mantenere i voti parziali. 
 Leggere il regolamento d’esame sulla pagina web delll’insegnamento per ulteriori dettagli.
 
-##### **Spiegazione Progetto**
+# Spiegazione Progetto
 
 Il progetto consiste:
 
