@@ -1,11 +1,11 @@
-##Autori
+**Autori**
 Matteo Tiboldo
 
-##Getting Started
+**Getting Started**
 Ricordarsi di attivare: "allow multiple istance"
 Avviare come prima cosa il ServerGUI e successivamente il ClientGUI (posso aprirne anche più di uno)
 
-##Presentazione progetto
+**Presentazione progetto**
 Il progetto consiste nello sviluppo di un servizio di posta elettronica contenente:
     - Un mail Server che mediante l'utilizzo dei thread gestisce le caselle di posta elettronica degli utenti
     - I mail Client che collegandosi al server permettono agli utenti l'accesso alle proprie caselle 
@@ -21,7 +21,7 @@ Dopo aver effettuato il Login l'utente avrà disponibili le proprie mail e potr�
 ad una altro utente.
 ![img_2.png](img_2.png)
 
-##Consegna
+**Consegna**
 Si sviluppi un’applicazione Java che implementi un servizio di posta elettronica organizzato con un mail server che 
 gestisce le caselle di posta elettronica degli utenti e i mail client necessari per permettere agli utenti di accedere 
 alle proprie caselle di posta.
@@ -94,8 +94,7 @@ prova orale e della discussione di laboratorio (i due voti hanno ugual peso nell
 essere registrato entro fine settembre 2022, data oltre la quale non è possibile mantenere i voti parziali. 
 Leggere il regolamento d’esame sulla pagina web delll’insegnamento per ulteriori dettagli.
 
-
-##Spiegazione Progetto
+##### **Spiegazione Progetto**
 
 Il progetto consiste:
 
