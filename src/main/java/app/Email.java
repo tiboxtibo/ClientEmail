@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The email object that will be sent and written to the json file
+ * Email object
  */
 public class Email extends Object implements Serializable {
 

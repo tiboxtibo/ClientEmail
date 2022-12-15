@@ -95,7 +95,7 @@ public class MailListController implements Initializable {
 
 
         for(int i = 0; i< split.length;i++){
-            String currSplit = split[i].replace("\"", "");//serve per eliminare le virgolette "
+            String currSplit = split[i].replace("\"", "");//serve per eliminare \"
             if(currSplit.equals(ClientMethods.myUser.getEmail())){
             }else{
                 tot += "," + currSplit ;

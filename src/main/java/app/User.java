@@ -3,7 +3,7 @@ package app;
 import java.io.Serializable;
 
 /**
- * The user object.
+ * User object.
  */
 public class User implements Serializable {
 

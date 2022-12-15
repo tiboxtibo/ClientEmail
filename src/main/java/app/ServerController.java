@@ -150,7 +150,7 @@ public class ServerController implements Initializable {
                                     Date date2 = null;
                                     for (Email e: listMail) {//per ogni email di user
                                        date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(e.getData());//prendo la data
-                                       if(date2.after(date1)){//se la data2 è dopo la data1
+                                       if(date2.after(date1)){//se la data2 è dopo la data1 -> significa che è una nuova email
                                            newMails.add(e);//aggiungo la mail e all'elenco delle nuove mail
                                        }
                                     }
